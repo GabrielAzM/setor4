@@ -1,0 +1,46 @@
+/* Os 3 estados visuais do jogo, aplicados como overlays sobre o canvas */
+
+/* DEDUCING — filtro azul escuro e frio: a "Sala de Mente" */
+#overlay-blue {
+  position: fixed; inset: 0; pointer-events: none; z-index: 20;
+  background: rgba(16, 34, 66, 0.42);
+  mix-blend-mode: multiply;
+  opacity: 0; transition: opacity 0.5s;
+}
+#overlay-blue.active { opacity: 1; }
+
+/* PUNISHED — flash vermelho pulsando + tremida da tela */
+#overlay-red {
+  position: fixed; inset: 0; pointer-events: none; z-index: 21;
+  background: rgba(140, 10, 10, 0.35);
+  opacity: 0;
+}
+#overlay-red.active { animation: red-flicker 0.22s steps(2) infinite; }
+
+@keyframes red-flicker {
+  0% { opacity: 0.9; }
+  50% { opacity: 0.15; }
+  100% { opacity: 0.75; }
+}
+
+#app.shake { animation: cam-shake 0.09s linear infinite; }
+
+@keyframes cam-shake {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(-6px, 4px); }
+  50% { transform: translate(5px, -5px); }
+  75% { transform: translate(-4px, -3px); }
+  100% { transform: translate(4px, 5px); }
+}
+
+/* Fade cinematográfico */
+#fade {
+  position: fixed; inset: 0; background: #000; pointer-events: none;
+  opacity: 0; transition: opacity 1.6s ease; z-index: 80;
+}
+#fade.active { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  #app.shake { animation: none; }
+  #overlay-red.active { animation: none; opacity: 0.6; }
+}

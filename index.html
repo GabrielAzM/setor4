@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SETOR-4</title>
+  <link rel="stylesheet" href="./css/base.css" />
+  <link rel="stylesheet" href="./css/states.css" />
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div id="app"></div>
+
+  <!-- HUD -->
+  <div id="hud">
+    <div id="crosshair"></div>
+    <div id="clue-counter"></div>
+    <div id="piece-slot" title="Peça de Quebra-Cabeça"></div>
+    <div id="hint"></div>
+    <div id="prompt"></div>
+    <div id="toast"></div>
+    <div id="title-toast"></div>
+  </div>
+
+  <!-- Overlays dos estados -->
+  <div id="overlay-blue"></div>
+  <div id="overlay-red"></div>
+  <div id="fade"></div>
+
+  <!-- Painel de inspeção (dossiê) -->
+  <div id="inspect" class="panel hidden">
+    <div class="panel-head">
+      <h3 id="inspect-title">—</h3>
+      <button id="inspect-close" class="btn-x">✕</button>
+    </div>
+    <canvas id="inspect-canvas" width="320" height="200"></canvas>
+    <p id="inspect-body"></p>
+    <p class="panel-foot">E ou Q fecha</p>
+  </div>
+
+  <!-- Modo Dedução -->
+  <div id="deduction" class="panel wide hidden">
+    <div class="panel-head"><h3>MODO DEDUÇÃO</h3><button id="ded-close" class="btn-x">✕</button></div>
+    <p id="ded-intro"></p>
+    <p id="ded-note" class="ded-note"></p>
+    <div id="ded-slots"></div>
+    <div id="ded-cards"></div>
+    <div class="panel-actions">
+      <button id="ded-clear" class="btn ghost">Limpar</button>
+      <button id="ded-confirm" class="btn danger" disabled>Confirmar dedução</button>
+    </div>
+  </div>
+
+  <!-- Rádio entre fases -->
+  <div id="radio" class="panel wide hidden">
+    <div class="panel-head"><h3>RÁDIO — SETOR-4</h3></div>
+    <div id="radio-lines"></div>
+    <div class="panel-actions"><button id="radio-continue" class="btn">▸ Continuar</button></div>
+  </div>
+
+  <!-- Encaixe da peça na porta -->
+  <div id="fitting" class="hidden">
+    <canvas id="fit-canvas" width="420" height="300"></canvas>
+    <p>A peça desliza para o molde...</p>
+  </div>
+
+  <!-- Escolha final -->
+  <div id="choice" class="panel hidden">
+    <div class="panel-head"><h3>KENJI OKADA</h3></div>
+    <p>Ele treme, em posição fetal, cercado de peças em branco. Ele não levanta os olhos.<br /><br />O revólver pesa na sua mão. 4 balas.</p>
+    <div class="panel-actions">
+      <button id="choice-shoot" class="btn danger">Atirar</button>
+      <button id="choice-spare" class="btn">Baixar a arma</button>
+    </div>
+  </div>
+
+  <!-- Anúncio do rádio no epílogo -->
+  <div id="announce" class="hidden"></div>
+
+  <!-- Quadro do Caso: as cenas se conectando -->
+  <div id="board" class="panel wide hidden">
+    <div class="panel-head"><h3>QUADRO DO CASO</h3><button id="board-close" class="btn-x">✕</button></div>
+    <canvas id="board-pieces" width="620" height="90"></canvas>
+    <div id="board-list"></div>
+    <div class="panel-actions"><button id="board-continue" class="btn danger hidden">▸ Seguir</button></div>
+  </div>
+
+  <!-- Game over narrativo -->
+  <div id="gameover" class="panel hidden">
+    <div class="panel-head"><h3>A ESCURIDÃO TE ENGOLIU</h3></div>
+    <p>Você errou demais. As luzes apagaram de vez, e algo no escuro riu baixinho. O Setor-4 te arrasta pra fora antes que seja tarde.<br /><br />A cena te espera de novo. Ela é paciente.</p>
+    <div class="panel-actions"><button id="gameover-retry" class="btn danger">Voltar à cena</button></div>
+  </div>
+
+  <!-- Retomar controle -->
+  <div id="resume" class="hidden"><p>Clique para retomar o controle</p></div>
+
+  <!-- Créditos -->
+  <div id="credits" class="hidden">
+    <div class="credits-inner">
+      <h1>SETOR-4</h1>
+      <p class="tag">O Verdadeiro Assassino está solto.</p>
+      <p>Um jogo de dedução e terror psicológico</p>
+      <p>Design e narrativa — Gabriel (Zylo)</p>
+      <p>Construído com Three.js — greybox v0.1</p>
+      <p class="tag">FIM</p>
+    </div>
+  </div>
+
+  <!-- Menu inicial -->
+  <div id="menu">
+    <h1>SETOR-4</h1>
+    <p class="tag">Sete cenas. Uma mente quebrada. Nenhuma sorte envolvida.</p>
+    <button id="menu-start" class="btn danger big">INICIAR INVESTIGAÇÃO</button>
+    <p class="controls">WASD mover · Mouse olhar · E inspecionar · TAB deduzir · C quadro do caso · F luz negra · K gravador · Q fechar painéis</p>
+    <p class="warn">Use fones. Contém luzes piscando e áudio distorcido.</p>
+  </div>
+
+  <script type="module" src="./js/main.js"></script>
+</body>
+</html>

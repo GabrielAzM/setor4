@@ -1,0 +1,1301 @@
+[
+  {
+    "id": "beco",
+    "name": "Fase 1 — O Beco",
+    "subtitle": "A chuva não lava tudo.",
+    "hint": "WASD anda · E inspeciona · TAB deduz · C quadro do caso · K gravador · F luz negra",
+    "spawn": [
+      0,
+      4.6
+    ],
+    "radioIntro": [
+      {
+        "who": "Artie",
+        "line": "Setor-4 pra central. Chegamos no beco. Chove que nem castigo."
+      },
+      {
+        "who": "Sarah",
+        "line": "Terceiro corpo do mês. Mesmo padrão. Central, a gente vai precisar de mais que hora extra."
+      },
+      {
+        "who": "Central",
+        "line": "Negativo pro reforço. Documentem e saiam. E agentes... não toquem no que não entenderem."
+      }
+    ],
+    "tape": {
+      "title": "Briefing 01",
+      "text": "— [chiado] — Vítima do sexo masculino, sem documentos. A perícia oficial se recusou a entrar no beco. De novo. Escutem o cenário. A ordem dos fatos importa mais do que os fatos. E cuidado: cena de crime é cheia de barulho. Nem toda evidência fala do crime. — [fim da fita]"
+    },
+    "room": {
+      "width": 5,
+      "depth": 12,
+      "height": 3.4,
+      "tex": {
+        "floor": "concrete",
+        "wall": "brick",
+        "ceil": "dark"
+      },
+      "fogColor": "0a0b0e",
+      "fogDensity": 0.13,
+      "ambient": 0.1,
+      "hemi": 0.24,
+      "rain": true
+    },
+    "objects": [
+      {
+        "id": "bilhete",
+        "kind": "box",
+        "size": [
+          0.3,
+          0.02,
+          0.22
+        ],
+        "pos": [
+          1.6,
+          0.02,
+          2.2
+        ],
+        "name": "Bilhete sob a pedra",
+        "interactive": true,
+        "isClue": true,
+        "sketch": "paper",
+        "clueText": "Dobrado com cuidado e preso sob uma pedra, protegido. O papel está quase seco — quem deixou, deixou antes da água tomar o beco. 'meia-noite. o beco de sempre. vem sozinho.'"
+      },
+      {
+        "id": "pneu",
+        "kind": "box",
+        "size": [
+          1.6,
+          0.02,
+          0.4
+        ],
+        "pos": [
+          -1.4,
+          0.02,
+          -0.8
+        ],
+        "name": "Marca de pneu",
+        "interactive": true,
+        "isClue": true,
+        "sketch": "tire",
+        "clueText": "A borracha cortou a lama por cima das poças já formadas. Freada funda, curta. Quem dirigia sabia exatamente onde parar."
+      },
+      {
+        "id": "corpo",
+        "kind": "box",
+        "size": [
+          0.6,
+          0.3,
+          1.8
+        ],
+        "pos": [
+          0.3,
+          0.15,
+          -3.6
+        ],
+        "name": "O corpo",
+        "interactive": true,
+        "isClue": true,
+        "sketch": "body",
+        "clueText": "Sem sinais de luta. As solas dos sapatos estão limpas — ele ficou parado num lugar seco, esperando por alguém, até deixar de esperar. Há um volume rígido, geométrico, alojado na garganta."
+      },
+      {
+        "id": "lixeira",
+        "kind": "cylinder",
+        "size": [
+          0.35,
+          0.9
+        ],
+        "pos": [
+          -1.8,
+          0.45,
+          3.4
+        ],
+        "name": "Lixeira revirada",
+        "interactive": true,
+        "isClue": true,
+        "sketch": "trash",
+        "clueText": "Revirada com pressa — mas o lixo espalhado é de dias atrás, endurecido. Seja lá quem mexeu aqui, não foi nesta noite. Nem tudo numa cena pertence ao crime."
+      },
+      {
+        "id": "porta1",
+        "kind": "box",
+        "size": [
+          1.4,
+          2.4,
+          0.15
+        ],
+        "pos": [
+          0,
+          1.2,
+          -5.85
+        ],
+        "name": "Porta com molde vazio",
+        "interactive": true,
+        "isDoor": true,
+        "sketch": "door"
+      }
+    ],
+    "deduction": {
+      "intro": "Reconstrua a noite. O que pertence à sequência do crime — e em que ordem?",
+      "cards": [
+        {
+          "id": "bilhete",
+          "label": "O bilhete sob a pedra"
+        },
+        {
+          "id": "pneu",
+          "label": "A freada na lama"
+        },
+        {
+          "id": "corpo",
+          "label": "O homem que esperava"
+        },
+        {
+          "id": "lixeira",
+          "label": "A lixeira revirada"
+        }
+      ],
+      "correctOrder": [
+        "bilhete",
+        "pneu",
+        "corpo"
+      ],
+      "successText": "Isca, chegada, execução — e um ruído descartado. Um compartimento se abre na parede com um estalo úmido."
+    },
+    "piece": {
+      "pos": [
+        1.9,
+        0.5,
+        -4.6
+      ]
+    },
+    "connection": {
+      "label": "A isca",
+      "text": "Ele escreve antes de agir. O bilhete é dele — e quem ensaia uma carta assim, ensaia em casa. Ensaia morando com alguém."
+    }
+  },
+  {
+    "id": "apartamento",
+    "name": "Fase 2 — O Apartamento",
+    "subtitle": "Ele morava com eles.",
+    "hint": "Nem toda evidência entra na dedução. Escolha o que importa.",
+    "spawn": [
+      0,
+      2.6
+    ],
+    "radioIntro": [
+      {
+        "who": "Sarah",
+        "line": "O prédio inteiro reclamou do cheiro por semanas. Ninguém subiu pra olhar."
+      },
+      {
+        "who": "Artie",
+        "line": "As contas tão pagas. Correio recolhido. Sarah... alguém MOROU aqui esse tempo todo."
+      },
+      {
+        "who": "Sarah",
+        "line": "Então reconstrói o dia dele. Do começo ao fim. Eu preciso entender com o que a gente tá lidando."
+      }
+    ],
+    "room": {
+      "width": 7,
+      "depth": 7,
+      "height": 2.6,
+      "tex": {
+        "floor": "wood",
+        "wall": "plaster",
+        "ceil": "dark"
+      },
+      "fogColor": "0b0a09",
+      "fogDensity": 0.11,
+      "ambient": 0.11,
+      "hemi": 0.24
+    },
+    "objects": [
+      {
+        "id": "calendario",
+        "kind": "box",
+        "size": [
+          0.5,
+          0.65,
+          0.03
+        ],
+        "pos": [
+          -3.3,
+          1.5,
+          -1.0
+        ],
+        "name": "Calendário na parede",
+        "interactive": true,
+        "isClue": true,
+        "sketch": "calendar",
+        "clueText": "Um X por dia, traço firme. A caneta está pendurada num barbante ao lado da cama, na altura de quem acabou de abrir os olhos."
+      },
+      {
+        "id": "louca",
+        "kind": "box",
+        "size": [
+          0.9,
+          0.45,
+          0.5
+        ],
+        "pos": [
+          2.6,
+          0.6,
+          -2.4
+        ],
+        "name": "Pia com louça",
+        "interactive": true,
+        "isClue": true,
+        "sketch": "dishes",
+        "clueText": "Duas xícaras. Borra fresca numa; a outra lavada, cheia, intocada. O coador ainda guarda o pó da primeira coada do dia."
+      },
+      {
+        "id": "cobertor",
+        "kind": "box",
+        "size": [
+          1.8,
+          0.5,
+          0.8
+        ],
+        "pos": [
+          0.2,
+          0.25,
+          1.8
+        ],
+        "name": "Sofá com cobertor",
+        "interactive": true,
+        "isClue": true,
+        "sketch": "blanket",
+        "clueText": "Largo demais pra uma pessoa. A programação circulada no jornal sobre o braço do sofá é toda de um mesmo horário — depois do almoço, antes de escurecer."
+      },
+      {
+        "id": "polaroid",
+        "kind": "box",
+        "size": [
+          0.35,
+          0.5,
+          0.05
+        ],
+        "pos": [
+          3.2,
+          1.1,
+          1.6
+        ],
+        "name": "Polaroids na geladeira",
+        "interactive": true,
+        "isClue": true,
+        "sketch": "photo",
+        "clueText": "Flash estourado contra a janela às escuras. A mesa posta ao fundo, os 'convidados' sentados. É a última imagem que ele fazia antes das luzes se apagarem."
+      },
+      {
+        "id": "correio",
+        "kind": "box",
+        "size": [
+          0.4,
+          0.1,
+          0.3
+        ],
+        "pos": [
+          -2.8,
+          0.75,
+          2.6
+        ],
+        "name": "Pilha de correspondência",
+        "interactive": true,
+        "isClue": true,
+        "sketch": "paper",
+        "clueText": "Contas recolhidas e empilhadas por data, pagas em dia. Rotina de qualquer vizinho do prédio. Nada aqui diferencia este apartamento de outro qualquer."
+      },
+      {
+        "id": "porta2",
+        "kind": "box",
+        "size": [
+          1.3,
+          2.3,
+          0.15
+        ],
+        "pos": [
+          0,
+          1.15,
+          -3.35
+        ],
+        "name": "Porta com molde vazio",
+        "interactive": true,
+        "isDoor": true,
+        "sketch": "door"
+      }
+    ],
+    "deduction": {
+      "intro": "Reconstrua a rotina diária dele com os corpos, do primeiro ao último gesto do dia.",
+      "cards": [
+        {
+          "id": "calendario",
+          "label": "O X no calendário"
+        },
+        {
+          "id": "louca",
+          "label": "As duas xícaras"
+        },
+        {
+          "id": "cobertor",
+          "label": "O sofá de frente pra TV"
+        },
+        {
+          "id": "polaroid",
+          "label": "As polaroids com flash"
+        },
+        {
+          "id": "correio",
+          "label": "As contas empilhadas"
+        }
+      ],
+      "correctOrder": [
+        "calendario",
+        "louca",
+        "cobertor",
+        "polaroid"
+      ],
+      "successText": "A rotina fecha — e o que era só rotina de prédio fica de fora. Atrás do calendário, algo destrava."
+    },
+    "piece": {
+      "pos": [
+        -3.0,
+        0.5,
+        -0.2
+      ]
+    },
+    "connection": {
+      "label": "A rotina",
+      "text": "Ele não caça. Ele conserva. E alguém que conserva mortos como vivos precisa cruzar a cidade sem ser visto — por baixo dela."
+    }
+  },
+  {
+    "id": "metro",
+    "name": "Fase 3 — Metrô Fantasma",
+    "subtitle": "O corredor não acaba. Você é que não percebeu.",
+    "hint": "Algo muda a cada volta. Encontre o que não pertence.",
+    "spawn": [
+      0,
+      10.5
+    ],
+    "radioIntro": [
+      {
+        "who": "Artie",
+        "line": "Sarah, esse corredor... eu já passei por esse cartaz. Três vezes."
+      },
+      {
+        "who": "Sarah",
+        "line": "Respira. Espaço não se repete. Cabeça repete. Procura o que MUDOU."
+      }
+    ],
+    "room": {
+      "width": 3.5,
+      "depth": 24,
+      "height": 2.8,
+      "tex": {
+        "floor": "concrete",
+        "wall": "tile",
+        "ceil": "dark"
+      },
+      "fogColor": "07080a",
+      "fogDensity": 0.15,
+      "ambient": 0.09,
+      "hemi": 0.2,
+      "loop": {
+        "stages": 3
+      }
+    },
+    "objects": [
+      {
+        "id": "relogio",
+        "kind": "cylinder",
+        "size": [
+          0.3,
+          0.08
+        ],
+        "pos": [
+          1.55,
+          2.1,
+          2
+        ],
+        "rot": 1.5708,
+        "name": "Relógio da estação",
+        "interactive": true,
+        "isClue": true,
+        "loopStage": 0,
+        "sketch": "clock",
+        "clueText": "3:33. A ferrugem soldou os ponteiros no lugar — dá pra ver as camadas de óxido, uma por cima da outra. Nenhuma delas é recente."
+      },
+      {
+        "id": "cartaz",
+        "kind": "box",
+        "size": [
+          0.7,
+          1.0,
+          0.03
+        ],
+        "pos": [
+          -1.68,
+          1.5,
+          -3
+        ],
+        "name": "Cartaz descascado",
+        "interactive": true,
+        "isClue": true,
+        "loopStage": 1,
+        "sketch": "poster",
+        "clueText": "Colado por cima de si mesmo, camada sobre camada. As de baixo, amareladas e quebradiças; a do topo ainda segura um resto de brilho."
+      },
+      {
+        "id": "pichacao",
+        "kind": "box",
+        "size": [
+          1.2,
+          0.6,
+          0.03
+        ],
+        "pos": [
+          1.68,
+          1.4,
+          -7
+        ],
+        "name": "Pichação na parede",
+        "interactive": true,
+        "isClue": true,
+        "loopStage": 2,
+        "sketch": "graffiti",
+        "clueText": "A tinta ainda escorre pelo azulejo, formando fios finos até o chão: 'ELE CONTA AS SUAS VOLTAS'."
+      },
+      {
+        "id": "catraca",
+        "kind": "box",
+        "size": [
+          0.9,
+          1.0,
+          0.4
+        ],
+        "pos": [
+          -1.3,
+          0.5,
+          9.5
+        ],
+        "name": "Catraca travada",
+        "interactive": true,
+        "isClue": true,
+        "sketch": "turnstile",
+        "clueText": "Travada com corrente e cadeado. A ferrugem da corrente é idêntica à do resto da estação: trancaram tudo de uma vez, num dia só. Volta após volta, ela não muda nada."
+      },
+      {
+        "id": "porta3",
+        "kind": "box",
+        "size": [
+          1.4,
+          2.4,
+          0.15
+        ],
+        "pos": [
+          0,
+          1.2,
+          -11.8
+        ],
+        "name": "Porta com molde vazio",
+        "interactive": true,
+        "isDoor": true,
+        "sketch": "door"
+      }
+    ],
+    "deduction": {
+      "intro": "Ordene as marcas do corredor no tempo. Quando o tempo voltar a andar, o ciclo quebra. Nem tudo aqui marca o tempo do ciclo.",
+      "cards": [
+        {
+          "id": "pichacao",
+          "label": "A pichação no azulejo"
+        },
+        {
+          "id": "relogio",
+          "label": "O relógio da estação"
+        },
+        {
+          "id": "cartaz",
+          "label": "As camadas de cartaz"
+        },
+        {
+          "id": "catraca",
+          "label": "A catraca acorrentada"
+        }
+      ],
+      "correctOrder": [
+        "relogio",
+        "cartaz",
+        "pichacao"
+      ],
+      "successText": "O tempo engata. No fim do corredor, uma porta que sempre esteve lá."
+    },
+    "piece": {
+      "pos": [
+        -1.2,
+        0.5,
+        -9.5
+      ]
+    },
+    "connection": {
+      "label": "O ciclo",
+      "text": "O corredor repetia porque a cabeça dele repete. E túnel interditado sem inquérito não some — vira papel esquecido em algum arquivo."
+    }
+  },
+  {
+    "id": "arquivo",
+    "name": "Fase 4 — Arquivo Morto",
+    "subtitle": "Décadas de casos que ninguém quis ligar.",
+    "hint": "F liga a Luz Negra. O que importa não está visível.",
+    "spawn": [
+      0,
+      3.2
+    ],
+    "radioIntro": [
+      {
+        "who": "Sarah",
+        "line": "Arquivo morto da polícia. A energia foi cortada há anos. Oficialmente, isso aqui não existe mais."
+      },
+      {
+        "who": "Artie",
+        "line": "Então por que tem caixas novas? Sarah, alguém vem aqui. Alguém ORGANIZA isso aqui."
+      }
+    ],
+    "room": {
+      "width": 8,
+      "depth": 8,
+      "height": 2.7,
+      "tex": {
+        "floor": "concrete",
+        "wall": "concrete",
+        "ceil": "dark"
+      },
+      "fogColor": "060606",
+      "fogDensity": 0.19,
+      "ambient": 0.05,
+      "hemi": 0.12
+    },
+    "objects": [
+      {
+        "id": "caixa87",
+        "kind": "box",
+        "size": [
+          0.5,
+          0.35,
+          0.4
+        ],
+        "pos": [
+          -2.8,
+          0.9,
+          -2.2
+        ],
+        "name": "Caixa de arquivo — 'Pescador'",
+        "interactive": true,
+        "isClue": true,
+        "sketch": "box",
+        "clueText": "Caso do Pescador. Etiqueta datilografada em máquina de fita, papel quebradiço que esfarela no toque. Vítimas com objetos na garganta. Arquivado como 'animal necrófago'."
+      },
+      {
+        "id": "caixa94",
+        "kind": "box",
+        "size": [
+          0.5,
+          0.35,
+          0.4
+        ],
+        "pos": [
+          2.6,
+          0.55,
+          -1.8
+        ],
+        "name": "Caixa de arquivo — 'Relojoeiro'",
+        "interactive": true,
+        "isClue": true,
+        "sketch": "box",
+        "clueText": "Caso do Relojoeiro. Etiqueta escrita a caneta esferográfica, papel amarelado mas inteiro. Cenas montadas como dioramas domésticos. O perito que ligou este caso ao Pescador foi transferido."
+      },
+      {
+        "id": "uv2003",
+        "kind": "uvdecal",
+        "size": [
+          2.2,
+          1.0
+        ],
+        "pos": [
+          -3.9,
+          1.5,
+          0.5
+        ],
+        "rot": 1.5708,
+        "text": "ELES APAGARAM\nO TÚNEL",
+        "name": "Escrita revelada na parede",
+        "interactive": true,
+        "isClue": true,
+        "uvOnly": true,
+        "sketch": "uvwall",
+        "clueText": "Riscado no reboco, por baixo de uma demão de tinta que já teve tempo de envelhecer: 'ELES APAGARAM O TÚNEL'. Um metrô interditado. Nenhum inquérito."
+      },
+      {
+        "id": "uv2011",
+        "kind": "uvdecal",
+        "size": [
+          2.2,
+          1.0
+        ],
+        "pos": [
+          3.9,
+          1.5,
+          1.2
+        ],
+        "rot": -1.5708,
+        "text": "A MENINA NÃO FOI\nA PRIMEIRA",
+        "name": "Escrita revelada na parede",
+        "interactive": true,
+        "isClue": true,
+        "uvOnly": true,
+        "sketch": "uvwall",
+        "clueText": "O traço ainda cheira a solvente, recente: 'A MENINA NÃO FOI A PRIMEIRA'. O caso da filha de Kenji Okada. O nome mais novo desta sala."
+      },
+      {
+        "id": "caixa99",
+        "kind": "box",
+        "size": [
+          0.5,
+          0.35,
+          0.4
+        ],
+        "pos": [
+          0.2,
+          0.35,
+          2.6
+        ],
+        "name": "Caixa de arquivo — 'Incêndio'",
+        "interactive": true,
+        "isClue": true,
+        "sketch": "box",
+        "clueText": "Caso do Incêndio, 1999. Carimbo enorme: ENCERRADO. Culpado preso, confissão assinada. A única caixa limpa da sala — ninguém precisou escondê-la."
+      },
+      {
+        "id": "porta4",
+        "kind": "box",
+        "size": [
+          1.3,
+          2.3,
+          0.15
+        ],
+        "pos": [
+          0,
+          1.15,
+          -3.85
+        ],
+        "name": "Porta com molde vazio",
+        "interactive": true,
+        "isDoor": true,
+        "sketch": "door"
+      }
+    ],
+    "deduction": {
+      "intro": "Quatro casos enterrados. Ligue-os na linha do tempo, do mais antigo ao mais recente. Um deles não pertence ao padrão.",
+      "cards": [
+        {
+          "id": "uv2011",
+          "label": "A menina que não foi a primeira"
+        },
+        {
+          "id": "caixa94",
+          "label": "O Relojoeiro"
+        },
+        {
+          "id": "uv2003",
+          "label": "O túnel apagado"
+        },
+        {
+          "id": "caixa87",
+          "label": "O Pescador"
+        },
+        {
+          "id": "caixa99",
+          "label": "O Incêndio — encerrado"
+        }
+      ],
+      "correctOrder": [
+        "caixa87",
+        "caixa94",
+        "uv2003",
+        "uv2011"
+      ],
+      "successText": "Quatro décadas, um padrão, zero inquéritos. Uma gaveta range e se abre sozinha."
+    },
+    "piece": {
+      "pos": [
+        0,
+        0.5,
+        2.8
+      ]
+    },
+    "connection": {
+      "label": "O padrão enterrado",
+      "text": "Alguém sabia — e arquivou. O último nome dos autos é o de um pai. E o luto de um pai tem endereço: o quarto que ele não conseguiu esquecer."
+    }
+  },
+  {
+    "id": "quarto",
+    "name": "Fase 5 — Quarto de Casinha",
+    "subtitle": "Uma réplica perfeita. Perfeita demais.",
+    "hint": "A melodia dela tinha uma ordem. Ele lembra. A caixa não.",
+    "spawn": [
+      0,
+      2.4
+    ],
+    "radioIntro": [
+      {
+        "who": "Artie",
+        "line": "Sarah... isso é a réplica do quarto da filha do Okada. Móvel por móvel."
+      },
+      {
+        "who": "Sarah",
+        "line": "Do arquivo do caso. Ele construiu isso de memória. Artie, quem faz isso não tá caçando. Tá... consertando."
+      }
+    ],
+    "room": {
+      "width": 6,
+      "depth": 6,
+      "height": 2.5,
+      "tex": {
+        "floor": "wood",
+        "wall": "plaster",
+        "ceil": "dark"
+      },
+      "fogColor": "0a090c",
+      "fogDensity": 0.1,
+      "ambient": 0.12,
+      "hemi": 0.26
+    },
+    "objects": [
+      {
+        "id": "caixamusica",
+        "kind": "box",
+        "size": [
+          0.4,
+          0.3,
+          0.3
+        ],
+        "pos": [
+          0,
+          0.75,
+          -1.6
+        ],
+        "name": "Caixa de música quebrada",
+        "interactive": true,
+        "isClue": true,
+        "sketch": "musicbox",
+        "clueText": "A manivela está partida. Arranhado na base, com letra de criança: 'a minha música começa subindo, papai'."
+      },
+      {
+        "id": "desenho",
+        "kind": "box",
+        "size": [
+          0.4,
+          0.3,
+          0.02
+        ],
+        "pos": [
+          -2.4,
+          1.3,
+          -0.5
+        ],
+        "name": "Desenho infantil",
+        "interactive": true,
+        "isClue": true,
+        "sketch": "drawing",
+        "clueText": "Um sol no topo de uma escada de degraus tortos. O sol não sobe nem desce no desenho — só permanece lá em cima, segurado por duas linhas firmes."
+      },
+      {
+        "id": "partitura",
+        "kind": "box",
+        "size": [
+          0.35,
+          0.02,
+          0.5
+        ],
+        "pos": [
+          1.9,
+          0.02,
+          0.8
+        ],
+        "name": "Partitura rasgada",
+        "interactive": true,
+        "isClue": true,
+        "sketch": "sheet",
+        "clueText": "Só um trecho legível, quase no fim da folha: as notas desenham degraus descendo, espaçados, como passos de quem vai devagar."
+      },
+      {
+        "id": "foto",
+        "kind": "box",
+        "size": [
+          0.3,
+          0.4,
+          0.02
+        ],
+        "pos": [
+          2.5,
+          1.2,
+          -2.2
+        ],
+        "name": "Porta-retrato virado",
+        "interactive": true,
+        "isClue": true,
+        "sketch": "frame",
+        "clueText": "No verso da foto, letra adulta e trêmula: 'ela repetia a primeira nota no fim, pra música nunca terminar de verdade'."
+      },
+      {
+        "id": "urso",
+        "kind": "box",
+        "size": [
+          0.3,
+          0.35,
+          0.25
+        ],
+        "pos": [
+          -1.9,
+          0.45,
+          1.8
+        ],
+        "name": "Urso de pelúcia",
+        "interactive": true,
+        "isClue": true,
+        "sketch": "bear",
+        "clueText": "Sentado na cama, etiqueta da loja ainda presa na orelha. Novo em folha. Tudo neste quarto é memória — menos ele."
+      },
+      {
+        "id": "porta5",
+        "kind": "box",
+        "size": [
+          1.3,
+          2.3,
+          0.15
+        ],
+        "pos": [
+          0,
+          1.15,
+          -2.85
+        ],
+        "name": "Porta com molde vazio",
+        "interactive": true,
+        "isDoor": true,
+        "sketch": "door"
+      }
+    ],
+    "deduction": {
+      "intro": "Reconstrua a melodia da caixa de música, do primeiro ao último movimento. Nem tudo neste quarto é memória dela.",
+      "cards": [
+        {
+          "id": "partitura",
+          "label": "Os degraus descendo"
+        },
+        {
+          "id": "foto",
+          "label": "A nota que volta"
+        },
+        {
+          "id": "caixamusica",
+          "label": "O começo riscado na base"
+        },
+        {
+          "id": "desenho",
+          "label": "O sol parado no alto"
+        },
+        {
+          "id": "urso",
+          "label": "O urso novo em folha"
+        }
+      ],
+      "correctOrder": [
+        "caixamusica",
+        "desenho",
+        "partitura",
+        "foto"
+      ],
+      "successText": "A melodia se completa no silêncio do quarto. Dentro da caixa de música, o fundo falso cede."
+    },
+    "piece": {
+      "pos": [
+        0,
+        0.5,
+        -0.4
+      ]
+    },
+    "connection": {
+      "label": "A filha",
+      "text": "A réplica é memória de pai. A melodia era dela. O luto virou método — e todo método precisa de uma oficina."
+    }
+  },
+  {
+    "id": "matadouro",
+    "name": "Fase 6 — O Matadouro",
+    "subtitle": "Aqui a mente dele quebrou de vez.",
+    "hint": "Siga o processo, do começo ao fim. Não se perca no vermelho.",
+    "spawn": [
+      0,
+      3.8
+    ],
+    "radioIntro": [
+      {
+        "who": "Sarah",
+        "line": "Luz de emergência. Geradores ligados há semanas. Artie, isso aqui tá OPERANDO."
+      },
+      {
+        "who": "Artie",
+        "line": "Ele transformou a linha de abate num... raciocínio. Se a gente entender a ordem, entende o que sobrou dele."
+      }
+    ],
+    "room": {
+      "width": 9,
+      "depth": 9,
+      "height": 3.2,
+      "tex": {
+        "floor": "concrete",
+        "wall": "metal",
+        "ceil": "metal"
+      },
+      "fogColor": "120607",
+      "fogDensity": 0.14,
+      "ambient": 0.08,
+      "hemi": 0.16,
+      "redEmergency": true
+    },
+    "objects": [
+      {
+        "id": "registro",
+        "kind": "box",
+        "size": [
+          0.5,
+          0.8,
+          0.4
+        ],
+        "pos": [
+          -3.6,
+          0.4,
+          3.2
+        ],
+        "name": "Balcão de registro",
+        "interactive": true,
+        "isClue": true,
+        "sketch": "register",
+        "clueText": "Fichas preenchidas à mão com nomes que não existem, empilhadas junto à porta de entrada do galpão. Nada anda nesta linha sem antes virar um nome numa ficha."
+      },
+      {
+        "id": "gancho",
+        "kind": "cylinder",
+        "size": [
+          0.06,
+          1.2
+        ],
+        "pos": [
+          -1.2,
+          2.2,
+          0.5
+        ],
+        "name": "Trilho de ganchos",
+        "interactive": true,
+        "isClue": true,
+        "sketch": "hook",
+        "clueText": "O trilho parte de cima do balcão e range em direção ao centro do salão. Os ganchos ainda balançam, vazios."
+      },
+      {
+        "id": "avental",
+        "kind": "box",
+        "size": [
+          0.5,
+          0.9,
+          0.1
+        ],
+        "pos": [
+          1.8,
+          0.9,
+          -1.4
+        ],
+        "name": "Avental pendurado",
+        "interactive": true,
+        "isClue": true,
+        "sketch": "apron",
+        "clueText": "Rígido de meses de uso, pendurado de frente pra bancada central — exatamente onde o trilho de ganchos termina."
+      },
+      {
+        "id": "dreno",
+        "kind": "cylinder",
+        "size": [
+          0.4,
+          0.05
+        ],
+        "pos": [
+          3.2,
+          0.03,
+          1.6
+        ],
+        "name": "Dreno central",
+        "interactive": true,
+        "isClue": true,
+        "sketch": "drain",
+        "clueText": "Esfregado até o metal ficar branco. O piso tem um leve declive: tudo que escorre da bancada termina aqui, antes de qualquer coisa sair deste lugar."
+      },
+      {
+        "id": "etiqueta",
+        "kind": "box",
+        "size": [
+          0.4,
+          0.25,
+          0.05
+        ],
+        "pos": [
+          3.6,
+          1.0,
+          -3.2
+        ],
+        "name": "Painel de etiquetas",
+        "interactive": true,
+        "isClue": true,
+        "sketch": "tag",
+        "clueText": "Etiquetas numeradas penduradas ao lado da porta dos fundos, a única saída da linha. Rotular é o último gesto antes de despachar."
+      },
+      {
+        "id": "extintor",
+        "kind": "cylinder",
+        "size": [
+          0.12,
+          0.55
+        ],
+        "pos": [
+          -3.9,
+          1.1,
+          -1.5
+        ],
+        "name": "Extintor na parede",
+        "interactive": true,
+        "isClue": true,
+        "sketch": "generic",
+        "clueText": "Lacre intacto, inspeção vencida há uma década. Herança do prédio, de antes dele. Não faz parte do processo de ninguém."
+      },
+      {
+        "id": "porta6",
+        "kind": "box",
+        "size": [
+          1.4,
+          2.4,
+          0.15
+        ],
+        "pos": [
+          0,
+          1.2,
+          -4.35
+        ],
+        "name": "Porta com molde vazio",
+        "interactive": true,
+        "isDoor": true,
+        "sketch": "door"
+      }
+    ],
+    "deduction": {
+      "intro": "Reconstrua a linha dele, da entrada à saída. Nem tudo neste galpão pertence ao processo.",
+      "cards": [
+        {
+          "id": "dreno",
+          "label": "O dreno esfregado"
+        },
+        {
+          "id": "registro",
+          "label": "As fichas de nomes"
+        },
+        {
+          "id": "etiqueta",
+          "label": "As etiquetas numeradas"
+        },
+        {
+          "id": "gancho",
+          "label": "O trilho de ganchos"
+        },
+        {
+          "id": "extintor",
+          "label": "O extintor lacrado"
+        },
+        {
+          "id": "avental",
+          "label": "O avental da bancada"
+        }
+      ],
+      "correctOrder": [
+        "registro",
+        "gancho",
+        "avental",
+        "dreno",
+        "etiqueta"
+      ],
+      "successText": "Entrada, transporte, trabalho, limpeza, saída — e o resto é só prédio. No fim da linha, o mecanismo cospe algo."
+    },
+    "piece": {
+      "pos": [
+        0,
+        0.5,
+        -3.2
+      ]
+    },
+    "connection": {
+      "label": "A oficina",
+      "text": "A linha de abate virou linha de raciocínio. E toda linha termina num palco: o lugar onde ele apresenta o resultado."
+    }
+  },
+  {
+    "id": "teatro",
+    "name": "Fase 7 — O Teatro de Marionetes",
+    "subtitle": "Não há mais quebra-cabeças. Só ele.",
+    "hint": "Aproxime-se.",
+    "spawn": [
+      0,
+      4.2
+    ],
+    "radioIntro": [
+      {
+        "who": "Sarah",
+        "line": "Palco iluminado. Um holofote só. Artie... ele tá ali no centro."
+      },
+      {
+        "who": "Artie",
+        "line": "Kenji Okada. Meu Deus. Ele pesa uns quarenta quilos."
+      },
+      {
+        "who": "Sarah",
+        "line": "Cercado de peças em branco. Ele não montou os quebra-cabeças pra gente, Artie. Ele TAVA TENTANDO se montar. Sua escolha, parceiro. Eu cubro qualquer uma."
+      }
+    ],
+    "room": {
+      "width": 10,
+      "depth": 10,
+      "height": 4,
+      "tex": {
+        "floor": "wood",
+        "wall": "dark",
+        "ceil": "dark"
+      },
+      "fogColor": "050506",
+      "fogDensity": 0.1,
+      "ambient": 0.16,
+      "hemi": 0.2
+    },
+    "objects": [
+      {
+        "id": "kenji",
+        "kind": "kenji",
+        "pos": [
+          0,
+          0,
+          -2.5
+        ],
+        "name": "Kenji Okada",
+        "interactive": true
+      },
+      {
+        "id": "cortina",
+        "kind": "box",
+        "size": [
+          3.5,
+          3.6,
+          0.1
+        ],
+        "pos": [
+          0,
+          1.8,
+          -4.9
+        ],
+        "name": "Cortina do palco",
+        "interactive": true,
+        "sketch": "curtain",
+        "clueText": "Veludo comido por traças. Atrás dela, nada. O teatro inteiro existe pra este único ato."
+      }
+    ],
+    "deduction": null,
+    "piece": null,
+    "connection": {
+      "label": "O Verdadeiro Assassino",
+      "text": "Kenji era a marionete. As cordas continuam lá em cima — e continuam puxando."
+    }
+  },
+  {
+    "id": "epilogo",
+    "cinematic": true,
+    "name": "O Beco — Exterior",
+    "subtitle": "",
+    "spawn": [
+      0,
+      4.4
+    ],
+    "room": {
+      "width": 6,
+      "depth": 10,
+      "height": 3.6,
+      "tex": {
+        "floor": "concrete",
+        "wall": "brick",
+        "ceil": "dark"
+      },
+      "fogColor": "0a0b0e",
+      "fogDensity": 0.13,
+      "ambient": 0.1,
+      "hemi": 0.22,
+      "rain": true
+    },
+    "objects": [
+      {
+        "id": "carro",
+        "kind": "box",
+        "size": [
+          1.7,
+          1.1,
+          3.6
+        ],
+        "pos": [
+          -1.6,
+          0.55,
+          -1.5
+        ],
+        "name": "O carro velho do Setor-4",
+        "color": "2b2e33"
+      },
+      {
+        "id": "carro2",
+        "kind": "box",
+        "size": [
+          1.5,
+          0.4,
+          3.2
+        ],
+        "pos": [
+          -1.6,
+          1.25,
+          -1.4
+        ],
+        "name": "",
+        "color": "24262a"
+      }
+    ],
+    "radioIntro": [
+      {
+        "who": "Artie",
+        "line": "Acabou. A papelada que se dane até amanhã."
+      },
+      {
+        "who": "Sarah",
+        "line": "Sabe o pior? Toda pista fechava. Toda peça encaixava. Perfeito demais pra uma mente quebrada."
+      },
+      {
+        "who": "Artie",
+        "line": "Sarah. Deixa. Encaixou, acabou."
+      }
+    ],
+    "announcement": "— [rádio da polícia] — ...atenção todas as unidades... homicídio confirmado no distrito leste... vítima com objeto alojado na garganta... cena organizada... repito, ocorrendo AGORA...",
+    "deduction": null,
+    "piece": null
+  }
+]

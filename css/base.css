@@ -1,0 +1,158 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: #000; }
+body { font-family: 'Courier New', monospace; color: #c9c7c2; }
+
+#app { position: fixed; inset: 0; }
+#app canvas { display: block; }
+
+.hidden { display: none !important; }
+
+/* ---------- HUD ---------- */
+#hud { position: fixed; inset: 0; pointer-events: none; z-index: 10; }
+#crosshair {
+  position: absolute; left: 50%; top: 50%; width: 4px; height: 4px;
+  transform: translate(-50%, -50%); background: rgba(220, 220, 220, 0.55); border-radius: 50%;
+}
+#clue-counter {
+  position: absolute; top: 18px; left: 20px; font-size: 14px; letter-spacing: 2px;
+  color: #9a9791; text-transform: uppercase;
+}
+#piece-slot {
+  position: absolute; top: 40px; left: 20px; width: 26px; height: 26px;
+  border: 1px dashed #555; opacity: 0.5;
+}
+#piece-slot.has { background: #8e1d1d; border-color: #d33; opacity: 1; box-shadow: 0 0 12px #a22; }
+#hint {
+  position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%);
+  font-size: 11px; color: #6d6b66; letter-spacing: 1px; text-align: center;
+}
+#prompt {
+  position: absolute; bottom: 52px; left: 50%; transform: translateX(-50%);
+  font-size: 15px; color: #e0dcd4; text-shadow: 0 0 8px #000; letter-spacing: 1px;
+}
+#toast {
+  position: absolute; top: 72px; left: 50%; transform: translateX(-50%);
+  font-size: 13px; color: #cfa9a9; background: rgba(10, 8, 8, 0.8); padding: 8px 16px;
+  border-left: 2px solid #8e1d1d; opacity: 0; transition: opacity 0.4s; max-width: 70%;
+}
+#toast.show { opacity: 1; }
+#title-toast {
+  position: absolute; top: 34%; width: 100%; text-align: center; opacity: 0;
+  transition: opacity 1.2s; pointer-events: none;
+}
+#title-toast.show { opacity: 1; }
+#title-toast h2 { font-size: 30px; letter-spacing: 6px; color: #ddd8cf; text-transform: uppercase; }
+#title-toast p { font-size: 14px; color: #8e8a83; margin-top: 8px; font-style: italic; }
+
+/* ---------- Painéis (dossiê) ---------- */
+.panel {
+  position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  width: min(560px, 92vw); background: #12100f; border: 1px solid #3a3733;
+  border-top: 3px solid #8e1d1d; padding: 22px 26px; z-index: 40;
+  box-shadow: 0 0 60px rgba(0, 0, 0, 0.9);
+}
+.panel.wide { width: min(720px, 94vw); }
+.panel-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+.panel-head h3 { font-size: 15px; letter-spacing: 3px; color: #d8d3ca; text-transform: uppercase; }
+.panel p { font-size: 14px; line-height: 1.7; color: #b5b1a9; white-space: pre-wrap; }
+.panel-foot { margin-top: 14px; font-size: 11px; color: #5f5c57; text-align: right; }
+.btn-x { background: none; border: 1px solid #444; color: #999; cursor: pointer; padding: 2px 8px; font-family: inherit; }
+.btn-x:hover { border-color: #8e1d1d; color: #d33; }
+#inspect.tape { border-top-color: #6b5f2a; }
+
+.panel-actions { display: flex; gap: 12px; justify-content: flex-end; margin-top: 18px; }
+.btn {
+  font-family: inherit; font-size: 13px; letter-spacing: 2px; text-transform: uppercase;
+  background: #1d1b19; color: #c9c5bd; border: 1px solid #4a4641; padding: 10px 18px; cursor: pointer;
+}
+.btn:hover { border-color: #8a857d; }
+.btn.danger { border-color: #6e1717; color: #e0b9b9; }
+.btn.danger:hover { background: #2a0f0f; border-color: #c22; }
+.btn.ghost { opacity: 0.7; }
+.btn.big { font-size: 16px; padding: 14px 30px; }
+.btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+/* ---------- Dedução ---------- */
+#ded-slots { display: flex; gap: 10px; margin: 18px 0 14px; flex-wrap: wrap; }
+.ded-slot {
+  min-width: 108px; flex: 1; min-height: 58px; border: 1px dashed #4a4641;
+  display: flex; align-items: center; justify-content: center; text-align: center;
+  font-size: 12px; color: #5f5c57; padding: 6px; cursor: pointer;
+}
+.ded-slot.filled { border-style: solid; border-color: #7a4040; color: #d8cfc4; background: #1a1412; }
+#ded-cards { display: flex; gap: 10px; flex-wrap: wrap; }
+.ded-card {
+  font-family: inherit; font-size: 12px; background: #201d1b; color: #c5c0b8;
+  border: 1px solid #55504a; padding: 10px 12px; cursor: pointer; max-width: 220px; text-align: left;
+}
+.ded-card:hover { border-color: #9c958b; }
+.ded-card.used { opacity: 0.25; pointer-events: none; }
+
+/* ---------- Rádio ---------- */
+#radio-lines { max-height: 40vh; overflow-y: auto; }
+#radio-lines p { margin-bottom: 12px; }
+#radio-lines .who { color: #c98f8f; letter-spacing: 1px; text-transform: uppercase; font-size: 12px; }
+
+/* ---------- Encaixe da peça ---------- */
+#fitting {
+  position: fixed; inset: 0; background: rgba(4, 3, 3, 0.94); z-index: 60;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 26px;
+}
+#fitting p { color: #8d887f; font-size: 13px; letter-spacing: 2px; }
+
+/* ---------- Menu / retomar / créditos ---------- */
+#menu {
+  position: fixed; inset: 0; background: radial-gradient(ellipse at center, #121013 0%, #060507 70%);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; z-index: 100;
+}
+#menu h1 { font-size: 54px; letter-spacing: 16px; color: #d8d3ca; }
+#menu .tag { color: #8e6a6a; font-size: 14px; letter-spacing: 2px; }
+#menu .controls { color: #6d6a64; font-size: 12px; margin-top: 10px; }
+#menu .warn { color: #574f4f; font-size: 11px; }
+
+#resume {
+  position: fixed; inset: 0; z-index: 30; display: flex; align-items: center; justify-content: center;
+  background: rgba(0, 0, 0, 0.55); cursor: pointer;
+}
+#resume p { letter-spacing: 3px; color: #bdb8b0; font-size: 15px; text-transform: uppercase; }
+
+#announce {
+  position: fixed; left: 50%; bottom: 16%; transform: translateX(-50%); z-index: 70;
+  width: min(640px, 90vw); font-size: 16px; line-height: 1.8; color: #cfc9bf;
+  background: rgba(8, 7, 7, 0.85); padding: 20px 26px; border-left: 3px solid #8e1d1d;
+}
+
+#credits {
+  position: fixed; inset: 0; background: #000; z-index: 120;
+  display: flex; align-items: center; justify-content: center; text-align: center;
+}
+.credits-inner h1 { font-size: 40px; letter-spacing: 14px; color: #d8d3ca; margin-bottom: 18px; }
+.credits-inner p { color: #8d887f; font-size: 14px; margin-bottom: 10px; }
+.credits-inner .tag { color: #a05252; letter-spacing: 3px; margin: 16px 0; }
+
+/* ---------- Sketch pericial no dossiê ---------- */
+#inspect-canvas {
+  display: block; margin: 0 auto 14px; border: 1px solid #3a3733;
+  background: #d9d2c2; max-width: 100%;
+}
+
+.ded-note { font-size: 12px; color: #a08585; margin-top: 6px; font-style: italic; }
+
+/* ---------- Quadro do Caso ---------- */
+#board { max-height: 84vh; overflow-y: auto; }
+#board-pieces { display: block; margin: 4px auto 16px; max-width: 100%; }
+.board-empty { color: #6d6a64; font-style: italic; }
+.board-item { display: flex; gap: 14px; position: relative; padding-bottom: 18px; }
+.board-item::before {
+  content: ''; position: absolute; left: 7px; top: 18px; bottom: -2px;
+  width: 2px; background: #6e1717;
+}
+.board-item:last-child::before { display: none; }
+.board-dot {
+  width: 16px; height: 16px; border-radius: 50%; background: #8e1d1d;
+  border: 2px solid #d8d3ca; flex-shrink: 0; margin-top: 4px; z-index: 1;
+}
+.board-card { border: 1px solid #3a3733; background: #17140f; padding: 12px 16px; flex: 1; }
+.board-card h4 { font-size: 13px; letter-spacing: 2px; color: #d8d3ca; text-transform: uppercase; margin-bottom: 4px; }
+.board-card .board-label { color: #c98f8f; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+.board-item.fresh .board-card { border-color: #8e1d1d; box-shadow: 0 0 18px rgba(142, 29, 29, 0.35); }
