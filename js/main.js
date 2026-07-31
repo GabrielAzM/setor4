@@ -1,11 +1,11 @@
 // Bootstrap: cena, loop de render e o fluxo completo do jogo
 import * as THREE from 'three';
-import { G, State, setState, bus, resetLevelFlags } from './game-state.js';
+import { G, State, setState, bus, emit, resetLevelFlags } from './game-state.js';
 import { initPlayer, updatePlayer, spawnAt } from './player.js';
-import { buildLevel, updateRoomFX, setUV, applyLoopStage } from './room-builder.js';
+import { buildLevel, updateRoomFX, setUV, applyLoopStage, popIn } from './room-builder.js';
 import { initInteraction, updateInteraction } from './interaction.js';
 import * as ui from './ui.js';
-import { ensureCtx, startStatic, stopStatic, playFinalClick } from './audio.js';
+import { ensureCtx, startStatic, stopStatic, playFinalClick, startAmbient, playGunshot, playLaugh } from './audio.js';
 
 let LEVELS = [];
 
@@ -81,18 +81,58 @@ async function boot() {
     });
   });
 
-  // Game over narrativo: reinicia a fase atual
-  bus.addEventListener('gameover', () => {
+  // Vidas globais zeradas: dispara o final "Caught" (a Marionete venceu antes da verdade)
+  bus.addEventListener('lives-depleted', () => {
     if (G.locked) G.controls.unlock();
     stopStatic();
-    ui.gameOverScreen(() => loadLevel(G.levelIndex));
+    runEnding('caught');
   });
 
-  // Clímax: confronto com Kenji
-  bus.addEventListener('confront-kenji', () => {
+  // Encontro roteirizado com a Marionete: aparece, ameaça, atira (desconta 1 vida), some —
+  // ou, na Fase 6, é capturada em vez de sumir (cfg.capture / cfg.captureLine no JSON).
+  bus.addEventListener('stalker-encounter', (e) => {
+    const cfg = e.detail;
+    if (!cfg || !G.stalkerMesh) return;
+    G.uiOpen = true;
+    playLaugh();
+    popIn(G.stalkerMesh);
+    ui.barkSequence(cfg.lines, () => {
+      playGunshot();
+      emit('punish-start');
+      G.lives = Math.max(0, G.lives - 1);
+      ui.updateHUD();
+      setTimeout(() => {
+        emit('punish-end');
+        if (G.lives <= 0) {
+          setState(State.CINEMATIC);
+          emit('lives-depleted');
+          return;
+        }
+        G.stalkerMesh.visible = false;
+        if (cfg.capture && cfg.captureLine) ui.toast(cfg.captureLine);
+        G.uiOpen = false;
+      }, 900);
+    });
+  });
+
+  // Clímax: o Miguel se entrega e empurra a arma até o Luci — não é uma escolha
+  // (o jogador não decide matar ou não), é inevitável. A ÚNICA escolha real vem
+  // depois: revelar a verdade ou calar.
+  bus.addEventListener('confront-miguel', () => {
     if (G.locked) G.controls.unlock();
     G.uiOpen = true;
-    ui.choiceScreen((choice) => runEnding(choice));
+    const lvl = G.level;
+    ui.barkSequence(lvl.confrontLines, () => {
+      setTimeout(() => {
+        playGunshot();
+        ui.bloodFlash();
+        setTimeout(() => {
+          ui.radioScreen([lvl.postConfrontLine], () => {
+            ui.choiceScreen(lvl.finalChoice, (choice) => runEnding(choice));
+          });
+        }, 1000);
+      }, 650);
+    });
   });
 
   // Loop de render
@@ -106,41 +146,52 @@ async function boot() {
   });
 }
 
+// Transição suave entre cenas: funde pro preto, monta a fase por baixo, funde de volta
 function loadLevel(i) {
   if (i >= LEVELS.length) return;
-  G.levelIndex = i;
-  const level = LEVELS[i];
-  G.level = level;
-  resetLevelFlags();
-  setUV(false);
-  stopStatic();
-  buildLevel(level);
-  const sp = level.spawn || [0, 3];
-  spawnAt(sp[0], sp[1], level.spawnFace ?? 0);
-  ui.updateHUD();
-  ui.setBlueOverlay(false);
+  ui.fadeBlack(() => {
+    G.levelIndex = i;
+    const level = LEVELS[i];
+    G.level = level;
+    resetLevelFlags();
+    setUV(false);
+    stopStatic();
+    buildLevel(level);
+    // Drone ambiente por fase — a "aspereza" nasce da própria sala (neblina densa, luz de emergência)
+    const r = level.room || {};
+    startAmbient(Math.min(1, (r.fogDensity ?? 0.12) * 3 + (r.redEmergency ? 0.4 : 0)));
+    const sp = level.spawn || [0, 3];
+    spawnAt(sp[0], sp[1], level.spawnFace ?? 0);
+    ui.updateHUD();
+    ui.setBlueOverlay(false);
+    ui.unfade();
 
-  const start = () => {
-    setState(State.EXPLORING);
-    ui.levelTitle(level.name, level.subtitle);
-    ui.showResumeHint();
-  };
+    const start = () => {
+      setState(State.EXPLORING);
+      ui.levelTitle(level.name, level.subtitle);
+      ui.showResumeHint();
+    };
 
-  if (level.radioIntro?.length) {
-    setState(State.CINEMATIC);
-    G.uiOpen = true;
-    ui.radioScreen(level.radioIntro, () => { G.uiOpen = false; start(); });
-  } else {
-    start();
-  }
+    if (level.radioIntro?.length) {
+      setState(State.CINEMATIC);
+      G.uiOpen = true;
+      ui.radioScreen(level.radioIntro, () => { G.uiOpen = false; start(); });
+    } else {
+      start();
+    }
+  }, 900);
 }
 
-// A cena final: O Beco, chuva, o rádio da polícia e a última peça
+// A cena final: O Beco, chuva, o rádio da polícia e a última peça.
+// 'reveal' = Luci assume a autoria e vai preso · 'hide' = o caso nunca fecha oficialmente
+// (o próprio Miguel queria isso — cada branch usa seu próprio conjunto de falas no JSON).
 function runEnding(choice) {
   setState(State.CINEMATIC);
   G.uiOpen = true;
+  // Só regista a conexão do Teatro quando o clímax de verdade aconteceu (não no final "Caught",
+  // que pode disparar de qualquer fase, com o jogador ainda sem ter chegado lá)
   const teatro = G.level;
-  if (teatro?.connection) {
+  if ((choice === 'reveal' || choice === 'hide') && teatro?.connection) {
     G.caseBoard.push({ name: teatro.name.replace(/^Fase \d+ — /, ''), connLabel: teatro.connection.label, connText: teatro.connection.text });
   }
   ui.fadeBlack(() => {
@@ -151,21 +202,25 @@ function runEnding(choice) {
     spawnAt(0, 4.4, 0);
     ui.unfade();
 
-    const lines = [...ep.radioIntro];
-    if (choice === 'shoot') lines.unshift({ who: 'Sarah', line: 'O eco do tiro ainda tá nos meus ouvidos, Artie.' });
-    else lines.unshift({ who: 'Sarah', line: 'Ele nem levantou os olhos quando a gente saiu.' });
+    const B = choice === 'reveal' ? 'Reveal' : choice === 'hide' ? 'Hide' : 'Caught';
+    const lines = ep['radioIntro' + B];
 
     ui.radioScreen(lines, () => {
       startStatic(0.09);
-      ui.typeAnnounce(ep.announcement, () => {
+      ui.typeAnnounce(ep['announcement' + B], () => {
         stopStatic();
-        ui.hideAnnounce();
-        ui.fadeBlack(() => {
-          setTimeout(() => {
-            playFinalClick();
-            setTimeout(() => ui.credits(), 1400);
-          }, 900);
-        }, 2000);
+        const finish = () => {
+          ui.hideAnnounce();
+          ui.fadeBlack(() => {
+            setTimeout(() => {
+              playFinalClick();
+              setTimeout(() => ui.credits(ep['creditsTag' + B]), 1400);
+            }, 900);
+          }, 2000);
+        };
+        const second = ep['announcement' + B + '2'];
+        if (second) ui.typeAnnounce(second, finish);
+        else finish();
       });
     });
   });

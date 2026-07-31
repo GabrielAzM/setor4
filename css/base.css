@@ -17,6 +17,10 @@ body { font-family: 'Courier New', monospace; color: #c9c7c2; }
   position: absolute; top: 18px; left: 20px; font-size: 14px; letter-spacing: 2px;
   color: #9a9791; text-transform: uppercase;
 }
+#lives-counter {
+  position: absolute; top: 18px; right: 20px; font-size: 14px; letter-spacing: 2px;
+  color: #c99; text-transform: uppercase;
+}
 #piece-slot {
   position: absolute; top: 40px; left: 20px; width: 26px; height: 26px;
   border: 1px dashed #555; opacity: 0.5;

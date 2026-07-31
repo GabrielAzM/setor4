@@ -16,9 +16,55 @@ function noise(ctx, w, h, alpha = 0.06, passes = 900) {
   }
 }
 
+// Sujeira ambiente — escorridos, mofo, rachaduras finas. Sempre em cinza:
+// textura dá leitura, não cor (a cor fica reservada pro que precisa chamar atenção).
+function grime(ctx, w, h) {
+  ctx.strokeStyle = 'rgba(15,15,16,0.3)';
+  for (let i = 0; i < 5; i++) {
+    const x0 = Math.random() * w;
+    ctx.lineWidth = 1 + Math.random() * 2;
+    ctx.beginPath();
+    ctx.moveTo(x0, 0);
+    let cx = x0;
+    for (let y = 0; y < h; y += 24) { cx += (Math.random() - 0.5) * 14; ctx.lineTo(cx, y); }
+    ctx.stroke();
+  }
+  for (let i = 0; i < 6; i++) {
+    const g = 20 + Math.random() * 25;
+    ctx.fillStyle = `rgba(${g},${g},${g},0.22)`;
+    ctx.beginPath();
+    ctx.ellipse(Math.random() * w, Math.random() * h, 18 + Math.random() * 46, 12 + Math.random() * 30, Math.random() * 3, 0, 7);
+    ctx.fill();
+  }
+}
+
+// Manchas escuras secas — sugerem sangue velho sem usar vermelho (mesma lição do
+// playtest do material revelado: "textura de verdade, não desenho"). Poças e
+// escorridos irregulares, quase pretos, com leve variação pra ler como úmido/seco.
+function bloodStain(ctx, w, h) {
+  for (let i = 0; i < 3; i++) {
+    const px = Math.random() * w, py = Math.random() * h;
+    const r = 26 + Math.random() * 60;
+    const grad = ctx.createRadialGradient(px, py, 0, px, py, r);
+    grad.addColorStop(0, 'rgba(8,7,7,0.65)');
+    grad.addColorStop(0.7, 'rgba(10,9,9,0.4)');
+    grad.addColorStop(1, 'rgba(10,9,9,0)');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.ellipse(px, py, r, r * (0.6 + Math.random() * 0.3), Math.random() * 3, 0, 7);
+    ctx.fill();
+    // escorrido saindo da poça
+    ctx.strokeStyle = 'rgba(9,8,8,0.35)'; ctx.lineWidth = 2 + Math.random() * 2;
+    let cx = px, cy = py;
+    ctx.beginPath(); ctx.moveTo(cx, cy);
+    for (let s = 0; s < 4; s++) { cx += (Math.random() - 0.5) * 10; cy += r * 0.25; ctx.lineTo(cx, cy); }
+    ctx.stroke();
+  }
+}
+
 // ---------- Superfícies do ambiente ----------
-export function surfaceTexture(kind, repeatX = 2, repeatY = 2) {
-  const w = 512, h = 512;
+export function surfaceTexture(kind, repeatX = 2, repeatY = 2, opts = {}) {
+  const w = 768, h = 768;
   const c = cv(w, h);
   const x = c.getContext('2d');
 
@@ -94,10 +140,35 @@ export function surfaceTexture(kind, repeatX = 2, repeatY = 2) {
     noise(x, w, h, 0.05, 1000);
   }
 
+  grime(x, w, h);
+  if (opts.blood) bloodStain(x, w, h);
+
   const t = new THREE.CanvasTexture(c);
   t.wrapS = t.wrapT = THREE.RepeatWrapping;
   t.repeat.set(repeatX, repeatY);
   return t;
+}
+
+// ---------- Céu (áreas externas) ----------
+// Gradiente de noite + estrelas esparsas, na cor do fog da sala pra fundir no horizonte.
+export function skyTexture(fogHex = 0x0a0b0e) {
+  const w = 512, h = 512;
+  const c = cv(w, h);
+  const x = c.getContext('2d');
+  const fog = new THREE.Color(fogHex);
+  const horizon = `rgb(${Math.round(fog.r * 255)},${Math.round(fog.g * 255)},${Math.round(fog.b * 255)})`;
+  const grad = x.createLinearGradient(0, 0, 0, h);
+  grad.addColorStop(0, '#020203');
+  grad.addColorStop(0.55, '#0b0c11');
+  grad.addColorStop(1, horizon);
+  x.fillStyle = grad; x.fillRect(0, 0, w, h);
+  for (let i = 0; i < 160; i++) {
+    const py = Math.random() * h * 0.6;
+    const b = 110 + Math.random() * 110;
+    x.fillStyle = `rgba(${b},${b},${b + 12},${0.25 + Math.random() * 0.5})`;
+    x.fillRect(Math.random() * w, py, 1, 1);
+  }
+  return new THREE.CanvasTexture(c);
 }
 
 // ---------- Desenho pericial das evidências ----------

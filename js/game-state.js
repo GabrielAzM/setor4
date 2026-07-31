@@ -24,7 +24,8 @@ export const G = {
   clues: new Set(),          // ids das pistas coletadas na fase atual
   solved: false,             // dedução da fase resolvida
   hasPiece: false,           // peça coletada
-  attempts: 0,               // erros de dedução na fase
+  lives: 7,                  // vidas globais pro JOGO INTEIRO (erro de dedução + tiro da Marionete) — não reseta por fase
+  stalkerMesh: null,         // referência da Marionete na fase atual, se houver (reseta por fase)
   uv: false,                 // modo Luz Negra ligado
   locked: false,             // pointer lock ativo
   uiOpen: false,             // algum painel 2D aberto (congela movimento)
@@ -42,21 +43,23 @@ export function setState(s) {
 }
 
 let punishTimer = null;
-const MAX_ATTEMPTS = 3;
+export const MAX_LIVES = 7;
 
 // Punição de sanidade: flash vermelho + tremida + áudio distorcido
 // countIt=false é usado pela tecla de debug (não conta erro)
+// As vidas são globais pro jogo inteiro — erro de dedução aqui só desconta 1;
+// zerar as vidas não reinicia a fase, dispara o final "Caught" (ver main.js).
 export function punish(countIt = true) {
-  if (countIt) G.attempts += 1;
+  if (countIt) G.lives = Math.max(0, G.lives - 1);
   setState(State.PUNISHED);
   emit('punish-start');
   playDistortion(2.2);
   clearTimeout(punishTimer);
   punishTimer = setTimeout(() => {
     emit('punish-end');
-    if (countIt && G.attempts >= MAX_ATTEMPTS) {
+    if (countIt && G.lives <= 0) {
       setState(State.CINEMATIC);
-      emit('gameover');
+      emit('lives-depleted');
     } else {
       setState(State.EXPLORING);
     }
@@ -67,8 +70,8 @@ export function resetLevelFlags() {
   G.clues = new Set();
   G.solved = false;
   G.hasPiece = false;
-  G.attempts = 0;
   G.uv = false;
   G.uiOpen = false;
   G.loop = null;
+  G.stalkerMesh = null;
 }

@@ -1,5 +1,5 @@
 // Camada 2D: HUD, painéis, overlays, rádio, encaixe, Quadro do Caso, finais
-import { G, bus, State } from './game-state.js';
+import { G, bus, State, MAX_LIVES } from './game-state.js';
 import { playClunk, playUnlock } from './audio.js';
 import { drawSketchInto, drawPuzzlePiece, tracePiecePath } from './textures.js';
 
@@ -9,6 +9,7 @@ export function initUI() {
   bus.addEventListener('punish-start', () => {
     $('overlay-red').classList.add('active');
     $('app').classList.add('shake');
+    updateHUD(); // reflete a vida perdida (erro de dedução ou tiro da Marionete) na hora
   });
   bus.addEventListener('punish-end', () => {
     $('overlay-red').classList.remove('active');
@@ -26,6 +27,7 @@ export function totalClues() {
 export function updateHUD() {
   const total = totalClues();
   $('clue-counter').textContent = total ? `Evidências ${G.clues.size}/${total}` : '';
+  $('lives-counter').textContent = `Vidas ${G.lives}/${MAX_LIVES}`;
   $('piece-slot').classList.toggle('has', G.hasPiece);
   $('hint').textContent = G.level?.hint || '';
 }
@@ -39,6 +41,24 @@ export function toast(text) {
   t.classList.add('show');
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+// Falas automáticas da Marionete — avança sozinho, sem esperar clique (é uma intrusão, não um diálogo calmo)
+export function barkSequence(lines, onDone) {
+  let i = 0;
+  const next = () => {
+    if (i >= lines.length) { onDone(); return; }
+    toast(lines[i++]);
+    setTimeout(next, 1900);
+  };
+  next();
+}
+
+// Estouro de sangue — flash único e forte, o instante do tiro
+export function bloodFlash() {
+  const el = $('blood-flash');
+  el.classList.add('active');
+  setTimeout(() => el.classList.remove('active'), 220);
 }
 
 export function levelTitle(name, sub) {
@@ -213,22 +233,20 @@ export function closeBoard(silent = false) {
 
 export function isBoardOpen() { return !$('board').classList.contains('hidden'); }
 
-// ---------- Game over narrativo ----------
-export function gameOverScreen(onRetry) {
-  const g = $('gameover');
-  g.classList.remove('hidden');
-  $('gameover-retry').onclick = () => {
-    g.classList.add('hidden');
-    onRetry();
-  };
-}
-
 // ---------- Sequência final ----------
-export function choiceScreen(onChoose) {
+// Painel de escolha genérico — título, corpo e rótulos vêm do levels.json
+// (reaproveitado tanto pro confronto quanto pela decisão final de revelar/calar).
+export function choiceScreen(content, onChoose) {
   const c = $('choice');
+  $('choice-title').textContent = content.title;
+  $('choice-body').textContent = content.body;
+  const btnA = $('choice-shoot');
+  const btnB = $('choice-spare');
+  btnA.textContent = content.a.label;
+  btnB.textContent = content.b.label;
   c.classList.remove('hidden');
-  $('choice-shoot').onclick = () => { c.classList.add('hidden'); onChoose('shoot'); };
-  $('choice-spare').onclick = () => { c.classList.add('hidden'); onChoose('spare'); };
+  btnA.onclick = () => { c.classList.add('hidden'); onChoose(content.a.id); };
+  btnB.onclick = () => { c.classList.add('hidden'); onChoose(content.b.id); };
 }
 
 export function fadeBlack(onDone, ms = 1600) {
@@ -250,6 +268,7 @@ export function typeAnnounce(text, onDone) {
 }
 export function hideAnnounce() { $('announce').classList.add('hidden'); }
 
-export function credits() {
+export function credits(tagline) {
+  if (tagline) $('credits-tag').textContent = tagline;
   $('credits').classList.remove('hidden');
 }

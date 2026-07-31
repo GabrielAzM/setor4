@@ -1,10 +1,10 @@
 // Raycast da câmera + todas as teclas de interação do jogo
 import * as THREE from 'three';
 import { G, State, setState, punish, emit } from './game-state.js';
-import { setUV, applyLoopStage, revealMesh, spawnDeductionLine } from './room-builder.js';
+import { setUV, applyLoopStage, revealMesh, spawnDeductionLine, revealObject } from './room-builder.js';
 import { openDeduction } from './deduction.js';
 import * as ui from './ui.js';
-import { startStatic, stopStatic, playEject } from './audio.js';
+import { startStatic, stopStatic, playEject, playSting } from './audio.js';
 
 const raycaster = new THREE.Raycaster();
 const CENTER = new THREE.Vector2(0, 0);
@@ -106,7 +106,7 @@ function interactWith(mesh) {
     return;
   }
 
-  if (d.isKenji) { emit('confront-kenji'); return; }
+  if (d.isMiguel) { emit('confront-miguel'); return; }
 
   if (d.isDoor) {
     if (G.hasPiece) emit('door-open');
@@ -118,10 +118,13 @@ function interactWith(mesh) {
   // Evidência: inspecionar REVELA a textura real do objeto no mundo
   revealMesh(mesh);
   ui.openInspect(d.name, d.clueText, { sketch: d.sketch });
+  if (d.revealsId) { const rv = revealObject(d.revealsId); if (rv) playSting(); }
   if (d.isClue && !G.clues.has(d.id)) {
     G.clues.add(d.id);
     ui.updateHUD();
     if (G.loop) applyLoopStage();
+    const se = G.level.stalkerEncounter;
+    if (se && se.afterClue === d.id) emit('stalker-encounter', se);
     const total = ui.totalClues();
     if (total && G.clues.size >= total) {
       if (G.loop) { G.loop.broken = true; ui.toast('O corredor parou de se repetir.'); }
@@ -144,7 +147,7 @@ export function updateInteraction() {
   aimed = target;
   if (aimed) {
     const d = aimed.userData;
-    const verb = d.isDoor ? 'Examinar a porta' : d.isKenji ? 'Confrontar' : d.isPiece ? 'Pegar a peça' : 'Inspecionar';
+    const verb = d.isDoor ? 'Examinar a porta' : d.isMiguel ? 'Confrontar' : d.isPiece ? 'Pegar a peça' : 'Inspecionar';
     ui.setPrompt(`[E] ${verb} — ${d.name}`);
   } else {
     ui.setPrompt('');

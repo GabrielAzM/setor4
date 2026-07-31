@@ -1,75 +1,101 @@
-# CLAUDE.md — Contexto do projeto SETOR-4
+# CLAUDE.md — Contexto de trabalho do projeto SETOR-4
 
-Você (Claude Code) é o desenvolvedor principal deste projeto. O dono é o Gabriel: dev de software (Python/Flask, JS, React básico), **primeiro jogo dele**, aprendendo game dev no processo. Explique decisões em 1-2 linhas quando criar/alterar arquivos. Trabalhe **incremental**: uma entrega por vez, testável no navegador, commit por entrega. Use modo Plan em mudanças grandes. Código e comentários em português; nomes de arquivos em inglês.
+Você (Claude Code) é o **desenvolvedor principal** deste projeto. O dono é o Gabriel: dev de software (Python/Flask, JS, React básico), **primeiro jogo dele**, aprendendo game dev no processo. Como trabalhar com ele:
+
+- **Incremental**: uma entrega por vez, testável no navegador, commit por entrega (se não houver git ainda, rode `git init` e commite o estado atual como "v0.3.1").
+- Explique decisões em 1-2 linhas ao criar/alterar arquivos. Use modo Plan em mudanças grandes.
+- Código e comentários em **português**; nomes de arquivos em inglês.
+- **Disco é a fonte da verdade**: SEMPRE leia o estado atual de um arquivo antes de editar ou reescrever. (Lição real: um rewrite cego quase destruiu uma versão avançada; foi recuperada do zip de entrega.)
+- O jogo até aqui foi escrito **sem execução visual**: bugs de integração são esperados. Corrigir o que o Gabriel reportar de playtest é SEMPRE a prioridade nº 1.
 
 ## O que este projeto é
 
-Escape room de terror psicológico investigativo, **3D first-person no navegador** (Three.js 0.160 via importmap/CDN, vanilla ES modules, sem build). Estado atual: **v0.2 completa e jogável** — 7 fases + epílogo, todos os sistemas centrais funcionando. Este código foi escrito sem execução visual prévia: **espere bugs de integração**; a primeira tarefa é sempre corrigir o que o Gabriel reportar do teste real.
+**SETOR-4**: escape room de terror psicológico investigativo, 3D first-person **no navegador** (Three.js 0.160 via importmap/CDN, vanilla ES modules, zero build, zero assets externos — todo áudio e toda textura são procedurais). Dois agentes (Artie e Sarah) atravessam 7 cenas de crime que são, na verdade, a mente fragmentada de Kenji Okada — um pai destruído pelo luto, manipulado pelo "Verdadeiro Assassino", que o jogo **nunca revela** (lacuna proposital e permanente).
+
+**Estado atual: v0.3.1 — jogo completo e jogável** do menu aos créditos: 7 fases + epílogo, dedução com distratores em todas as fases, revelação de matéria, fio de dedução, Quadro do Caso, Luz Negra, gravador K7, punição/game over, escolha final e epílogo.
 
 ## Pilar de ouro (INEGOCIÁVEL)
 
-Habilidade do JOGADOR > stats. Zero RPG, zero atributos, zero sorte, zero automação de dedução. O código NUNCA entrega conclusões nem destaca a resposta ("você percebeu que..."). O jogador deduz sozinho a partir dos textos das pistas. Qualquer feature nova deve respeitar isso.
+**Habilidade do JOGADOR > stats.** Zero RPG, zero sorte, zero automação de dedução. O código NUNCA entrega conclusões nem destaca a resposta. O jogador infere a partir de estados materiais descritos nos textos (ferrugem, tinta fresca, papel quebradiço). Qualquer feature nova respeita isso.
 
-## Os 3 estados visuais (máquina de estados em `game-state.js`)
+## Decisões de design e ética (fixas)
 
-| Estado | Visual | Implementação |
-|---|---|---|
-| EXPLORING | Mundo cinza dessaturado; vermelho-sangue emissivo só nos interativos | materiais em `room-builder.js` |
-| DEDUCING | Filtro azul frio | `#overlay-blue` (CSS) via `ui.setBlueOverlay` |
-| PUNISHED | Flash vermelho + tremida + áudio distorcido ~2,2s | `#overlay-red` + `.shake` + `audio.playDistortion` |
-
-Extras: MENU e CINEMATIC (rádio, encaixe, final). Debug: teclas 1/2/3.
+1. NUNCA nomear casos criminais, pessoas ou cidades reais. Toda a mitologia é ficção integral.
+2. A identidade do Verdadeiro Assassino é **LACUNA**: nunca aparece, nunca é nomeado, nunca é explicado — em nenhuma mídia, nunca.
+3. O jogo quase não data nada: cronologia por material. Único ano cravado: 1999 (o Incêndio — o único caso resolvido, de propósito).
+4. A filha de Kenji não tem nome (canon por omissão).
+5. A escolha final (Atirar/Poupar) muda só uma fala de Sarah; o epílogo é o mesmo — a impotência é o ponto.
 
 ## Arquitetura
 
-- `G` (em `game-state.js`) = contexto compartilhado mutável entre módulos. `bus` = EventTarget para eventos (`punish-start/end`, `gameover`, `door-open`, `confront-kenji`, `lock/unlock`, `loop-cycle`, `piece-ejected`, `uv-changed`, `state-changed`).
-- **Tudo orientado a dados**: `data/levels.json` define salas, objetos, pistas, deduções, textos. Criar fase = escrever JSON. NÃO hardcode conteúdo de fase em JS.
-- Fluxo de fase (`main.js`): `loadLevel` → `resetLevelFlags` → `buildLevel` → rádio intro → EXPLORING → pistas → TAB → dedução → acerto ejeta peça (`makePieceMesh`) → pegar peça → porta → `fittingAnimation` → próxima fase. Erro → `punish(true)`; 3 erros → `gameover` → reinicia a fase (pistas zeram — decisão de tensão, ajustável).
-- Fase 3 (loop): `G.loop` teleporta o player no fim do corredor e cicla `loopStage`; objetos com `loopStage` só aparecem no estágio correspondente; coletar as 3 pistas quebra o loop.
-- Luz Negra: `setUV` troca cor/intensidade da lanterna e a visibilidade dos `uvItems` (`uvdecal` usa CanvasTexture com texto).
-- Fase 7: sem dedução; `kenji` interativo dispara `confront-kenji` → escolha → `runEnding` (epílogo cinematográfico: chuva, rádio, anúncio datilografado, fade, clique final da peça, créditos).
-- Áudio 100% sintetizado em `audio.js` (Web Audio) — sem assets.
+- `G` (game-state.js) = contexto mutável compartilhado. `bus` = EventTarget (`punish-start/end`, `gameover`, `door-open`, `confront-kenji`, `lock/unlock`, `loop-cycle`, `piece-ejected`, `uv-changed`, `state-changed`).
+- **Data-driven**: `data/levels.json` define TUDO de cada fase (sala, tex, luzes, objetos, sketch, pistas, dedução com distratores, connection, tape, piece). Criar/editar fase = editar JSON. NÃO hardcode conteúdo de fase em JS.
+- Estados: EXPLORING (cinza + vermelho pulsando nos interativos) · DEDUCING (overlay azul) · PUNISHED (flash vermelho + shake + áudio distorcido; 3 erros = game over narrativo, fase reinicia) · MENU/CINEMATIC. Debug: teclas 1/2/3.
+- Fluxo: `loadLevel` → rádio intro → explorar → inspecionar (revela matéria + sketch no dossiê) → TAB (exige TODAS as `isClue`; `ui.totalClues()` conta pelos objects) → dedução (slots = `correctOrder.length` < nº de cartas) → acerto: **fio de dedução** (`spawnDeductionLine`) percorre as evidências na ordem até o compartimento → peça ejeta → pegar → segundo fio até a porta → `fittingAnimation` → connection empurrada pro **Quadro do Caso** (`G.caseBoard`, persiste entre fases; tecla C) → próxima fase.
+- Fase 3: corredor em loop (`G.loop` teleporta e cicla `loopStage`); coletar todas as pistas quebra o ciclo. Fase 7: sem dedução; `confront-kenji` → escolha → `runEnding`.
+- `textures.js` tem **três sistemas**: `surfaceTexture` (ambiente: tijolo/concreto/azulejo/metal/madeira/gesso em cinza), `evidenceCanvas`/`drawSketchInto` (sketch pericial — SÓ no dossiê 2D), `materialCanvas`/`revealMaterialTexture` + `MATERIAL_MAP` (matéria real aplicada no mesh 3D ao inspecionar). Objeto novo no JSON: escolher um `sketch` existente e o material vem via MATERIAL_MAP.
 
-## Sistemas adicionados na v0.2
+## Mapa de arquivos
 
-- `js/textures.js`: texturas procedurais (superfícies em cinza), sketches periciais (`evidenceCanvas`, tema paper/dark), e a peça de quebra-cabeça (`tracePiecePath` 2D + `makePieceGeometry` 3D com knobs).
-- **Revelação** (`revealMesh` em room-builder): 1ª inspeção aplica a textura do objeto e reduz o emissive pra 0.12 fixo (não pulsante) — feedback de progresso.
-- **Iscas na dedução**: `deduction.cards` pode ter MAIS itens que `deduction.correctOrder`; slots = correctOrder.length. Coletar todas as evidências (`isClue`) continua sendo o requisito do TAB (`ui.totalClues()` conta pelos objects, não pelos cards).
-- **Quadro do Caso**: `G.caseBoard` (persiste entre fases; NÃO é zerado em resetLevelFlags). Cada level tem `connection {label, text}` — registrado ao atravessar a porta (main.js) e exibido com destaque antes da próxima fase. Tecla C abre a qualquer momento. Peças desenhadas encaixando em `#board-pieces`.
+```
+index.html            UI 2D completa + importmap
+css/base.css          HUD, painéis dossiê, dedução, board, menu
+css/states.css        overlays dos 3 estados + fade
+js/main.js            bootstrap, loop, fluxo de fases, board na porta, final
+js/game-state.js      G, bus, estados, punição
+js/player.js          first-person, colisão AABB, teleporte do loop
+js/room-builder.js    salas do JSON, luzes, chuva, reveal, fio de dedução, peça 3D
+js/interaction.js     raycast, E/TAB/C/F/K/Q, pistas, porta, kenji
+js/deduction.js       UI de ordenar cartas c/ distratores, validação, fio no acerto
+js/ui.js              HUD, dossiê c/ sketch, board, rádio, encaixe, gameover, créditos
+js/audio.js           Web Audio sintetizado (distorção, clunks, estática, clique final)
+js/textures.js        superfícies + sketches + materiais + geometria da peça
+data/levels.json      7 fases + epílogo (fonte única de conteúdo)
+docs/                 SETOR-4_Detonado_v0.3.1.docx · SETOR-4_Lore_v0.3.1.docx
+README.md             como rodar, controles, walkthrough com soluções
+```
+
+## Documentação (docs/)
+
+- **Detonado**: guia completo (mecânicas, conexões, soluções fase a fase).
+- **Lore**: bíblia narrativa com sistema de selos — **CANON** (está no jogo) / **BÍBLIA** (bastidor, ajustável) / **LACUNA** (nunca se preenche).
+- REGRA: mudou canon no jogo (texto, ordem, connection) → avisar o Gabriel que os .docx precisam de atualização correspondente.
 
 ## Decisões conscientes (não são bugs)
 
-1. **Dedução por clique** (carta → próximo slot), não drag & drop — mais confiável cross-device. Polir pra drag é entrega futura.
-2. Colisão só com as paredes (AABB da sala); atravessa objetos pequenos.
-3. Encaixe da peça é overlay 2D (conforme GDD: "as peças deslizam pela tela").
-4. Dificuldade v0.2: textos sem marcadores explícitos de ordem + iscas nas fases 1, 2 e 6. Calibrar mais com playtests.
-5. Sem persistência de progresso (F5 = jogo do zero).
-6. Inspiração sensível: NUNCA nomear casos criminais reais no jogo (decisão de design/ética já acordada).
+1. Dedução por clique (não drag & drop) — confiável cross-device; drag é polish futuro.
+2. Colisão só com paredes (AABB); atravessa objetos pequenos.
+3. Encaixe da peça é overlay 2D (GDD: "as peças deslizam pela tela").
+4. Sem persistência (F5 = do zero) — localStorage é entrega futura.
+5. Game over zera as pistas da fase (tensão; ajustável).
 
-## Changelog v0.3.1
+## ESTRATÉGIA DE PRODUTO (acordada — importante)
 
-- **Texturas de MATERIAL na revelação 3D** (`revealMaterialTexture` + `materialCanvas` em textures.js): inspecionar agora aplica matéria real no objeto — zinco sujo com escorridos (lixeira), sangue coagulado sobre lona (corpo), papel envelhecido com caligrafia borrada, banda de rodagem no asfalto, veludo com pregas, pelúcia com etiqueta etc. O **sketch pericial ficou exclusivo do dossiê 2D** (drawSketchInto no painel). Mapa sketch→material em MATERIAL_MAP; adicionar objeto novo = escolher um sketch existente, o material vem junto.
-- Revelado quase não brilha mais (emissive 0.05) e não tinge de vermelho — feedback do playtest: "textura de verdade, não desenho".
+**Fase atual: DESIGN LOCK no web.** O protótipo web é o laboratório (iteração em segundos); Roblox é o destino de produto. NÃO portar enquanto o design estiver mudando — cada mudança custaria dobrado.
 
-## Changelog v0.3 (nesta entrega)
+**Critérios de lock (quando atingidos, congela `levels.json` e inicia o port):**
+- Puzzles calibrados por playtests de TERCEIROS (não só o Gabriel, que sabe as respostas);
+- Dificuldade certa nas 7 fases (distratores enganando na taxa certa, sem frustrar);
+- Loop central comprovadamente divertido do início ao fim.
 
-1. **Fio de dedução** (`spawnDeductionLine` em room-builder.js): no acerto, uma linha vermelha se desenha pelo cenário ligando as evidências NA ORDEM deduzida até o compartimento — a peça só ejeta quando o fio chega. Ao pegar a peça, um segundo fio corre até a porta. É a conexão física dedução → cenário → escape, complementando o Quadro do Caso (tecla C), que conecta as fases entre si.
-2. **Distratores nas 3 fases que faltavam**: catraca (Metrô), caixa do Incêndio/1999 (Arquivo), urso de pelúcia (Quarto). Agora TODAS as fases têm mais cartas que slots.
-3. Sketches novos em textures.js: `bear` e `turnstile`.
-4. Lição operacional: o disco é a fonte da verdade — sempre inspecionar o estado atual dos arquivos antes de reescrever (um rewrite cego quase destruiu a v0.2; recuperada do zip de entrega).
+**Não gastar polish web em coisa de produto final** (mobile, deploy bonito, modelos GLTF) — isso pertence ao Roblox.
 
-## Roadmap sugerido (uma entrega por vez, na ordem que o Gabriel pedir)
+**O port Roblox (quando chegar a hora):**
+- É **reescrita do motor em Luau**, não tradução: JS/Three.js não roda no Roblox.
+- Workflow: **Rojo** (projeto como arquivos .luau em pasta normal, sincronizada com o Studio) → VS Code + git + Claude Code continuam sendo o ambiente.
+- **Ponte Lune**: Lune (runtime Luau standalone, lib `roblox` embutida) NÃO roda o jogo, mas lê/escreve .rbxl/.rbxm por script. Primeiro tijolo do port: um **conversor Lune** que lê `data/levels.json` e GERA o lugar Roblox (salas, objetos, ProximityPrompts) — uma fonte de verdade, dois jogos. Pode ser construído em paralelo SEM custo de sincronização, já que o conteúdo vive no JSON.
+- Mapeamentos: inspeção→ProximityPrompt · first-person/colisão→nativos · fio→Beam entre Attachments · estados→ColorCorrectionEffect + Atmosphere · texturas→materiais/decals nativos · áudio→assets + DistortionSoundEffect (sem síntese runtime) · save→DataStore · co-op 2 agentes→nativo (era o item 11 do roadmap; no Roblox vira natural).
+- Aviso: classificação etária Roblox — terror vende (Doors, The Mimic), mas sangue/temática exigirão classificação mais alta e provável suavização das texturas de sangue.
 
-1. **Correção de bugs do primeiro teste real** (prioridade absoluta)
-2. Drag & drop real na dedução + animação das cartas
-3. Save/checkpoint via localStorage (fase atual)
-4. Iluminação por fase (holofote no Teatro, spots no Matadouro) e props extras nas salas
-5. Sons ambientes contínuos por fase (drone, chuva audível, coração no PUNISHED)
-6. Timer visível de pressão no PUNISHED e no Matadouro
-7. Modelos GLTF substituindo primitivas (Blender/asset packs) — manter slots do JSON
-8. Menu de opções (sensibilidade do mouse, volume, reduced motion)
-9. Mobile (joystick virtual) · 10. Deploy (itch.io/GitHub Pages) · 11. Co-op 2 jogadores (WebSocket) — só depois de tudo acima
+## Roadmap priorizado
+
+1. **Bugs reportados de playtest** (sempre nº 1).
+2. **Calibrar dificuldade com playtests externos** — instrumentar se ajudar (ex.: log local de erros por fase) e ajustar textos/distratores no JSON.
+3. Polish web barato que serve ao lock: drag & drop na dedução; sons ambientes; iluminação por fase; timer de pressão no Matadouro.
+4. (Paralelo, opcional) Infra Roblox sem conteúdo: setup Rojo + **conversor Lune levels.json→.rbxm** + esqueleto do motor Luau.
+5. Pós-lock: port completo Roblox. O web congela como protótipo de referência.
+6. Extras web só se fizerem sentido: localStorage, menu de opções, deploy itch.io como demo pública.
 
 ## Como testar
 
-`README.md` tem controles e walkthrough com todas as soluções. Live Server ou `python -m http.server`. Critério mínimo de regressão: completar a Fase 1 inteira (pistas → dedução → peça → porta) sem erro no console.
+`README.md` tem controles e o walkthrough com todas as soluções. Rodar: Live Server no `index.html` ou `python -m http.server`. Regressão mínima: completar a Fase 1 inteira (pistas → dedução → fio → peça → porta) sem erro no console. Regressão completa: fases 3 (loop quebra), 4 (Luz Negra revela 2 pistas), 7 + epílogo (escolha → rádio → clique final → créditos).

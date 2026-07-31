@@ -33,6 +33,14 @@
   100% { transform: translate(4px, 5px); }
 }
 
+/* Estouro de sangue — flash único e forte (o tiro), diferente do flicker contínuo da punição */
+#blood-flash {
+  position: fixed; inset: 0; pointer-events: none; z-index: 22;
+  background: radial-gradient(ellipse at center, rgba(130, 0, 0, 0.88) 0%, rgba(40, 0, 0, 0.55) 55%, rgba(0, 0, 0, 0) 100%);
+  opacity: 0; transition: opacity 0.25s ease;
+}
+#blood-flash.active { opacity: 1; }
+
 /* Fade cinematográfico */
 #fade {
   position: fixed; inset: 0; background: #000; pointer-events: none;

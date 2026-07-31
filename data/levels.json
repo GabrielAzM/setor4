@@ -10,7 +10,7 @@
     ],
     "radioIntro": [
       {
-        "who": "Artie",
+        "who": "Luci",
         "line": "Setor-4 pra central. Chegamos no beco. Chove que nem castigo."
       },
       {
@@ -39,9 +39,133 @@
       "fogDensity": 0.13,
       "ambient": 0.1,
       "hemi": 0.24,
-      "rain": true
+      "rain": true,
+      "bloodFloor": true,
+      "outdoor": true
     },
     "objects": [
+      {
+        "id": "poste1",
+        "kind": "streetlamp",
+        "pos": [
+          1.9,
+          0,
+          0.6
+        ],
+        "name": "Poste de luz"
+      },
+      {
+        "id": "bueiro",
+        "kind": "box",
+        "size": [
+          0.6,
+          0.02,
+          0.6
+        ],
+        "pos": [
+          -0.6,
+          0.01,
+          4.6
+        ],
+        "name": "Bueiro",
+        "interactive": true,
+        "sketch": "drain",
+        "clueText": "Grade enferrujada, água parada demais pra ver o fundo. Cheiro de esgoto parado há anos, não de hoje."
+      },
+      {
+        "id": "rato1",
+        "kind": "cylinder",
+        "size": [
+          0.08,
+          0.16
+        ],
+        "pos": [
+          1.1,
+          0.08,
+          3.7
+        ],
+        "color": "1c1a18",
+        "name": "Rato"
+      },
+      {
+        "id": "rato2",
+        "kind": "cylinder",
+        "size": [
+          0.07,
+          0.14
+        ],
+        "pos": [
+          -2.0,
+          0.07,
+          -1.9
+        ],
+        "color": "1c1a18",
+        "name": "Rato"
+      },
+      {
+        "id": "entulho1",
+        "kind": "box",
+        "size": [
+          0.35,
+          0.12,
+          0.25
+        ],
+        "pos": [
+          -2.1,
+          0.12,
+          2.9
+        ],
+        "color": "2e2b24",
+        "name": "Lixo espalhado"
+      },
+      {
+        "id": "entulho2",
+        "kind": "box",
+        "size": [
+          0.22,
+          0.08,
+          0.3
+        ],
+        "pos": [
+          -1.5,
+          0.08,
+          3.7
+        ],
+        "color": "302a20",
+        "name": "Lixo espalhado"
+      },
+      {
+        "id": "poca1",
+        "kind": "box",
+        "size": [
+          0.9,
+          0.01,
+          0.6
+        ],
+        "pos": [
+          0.9,
+          0.005,
+          -2.4
+        ],
+        "color": "121316",
+        "name": "Poça"
+      },
+      {
+        "id": "poca2",
+        "kind": "box",
+        "size": [
+          0.7,
+          0.01,
+          0.5
+        ],
+        "pos": [
+          -0.5,
+          0.005,
+          1.1
+        ],
+        "color": "121316",
+        "name": "Poça"
+      },
       {
         "id": "bilhete",
         "kind": "box",
@@ -134,6 +258,27 @@
         "interactive": true,
         "isDoor": true,
         "sketch": "door"
+      },
+      {
+        "id": "uvbeco",
+        "kind": "uvdecal",
+        "size": [
+          1.8,
+          0.8
+        ],
+        "pos": [
+          2.4,
+          1.6,
+          -1.0
+        ],
+        "rot": -1.5708,
+        "text": "ELE ESCOLHE\nQUEM ESPERA",
+        "name": "Escrita revelada na parede",
+        "interactive": true,
+        "isClue": true,
+        "uvOnly": true,
+        "sketch": "uvwall",
+        "clueText": "Riscado na tijoleira, alto demais pra ser acidental: 'ELE ESCOLHE QUEM ESPERA'. Só aparece sob luz negra — quem escreveu não queria ser visto escrevendo."
       }
     ],
     "deduction": {
@@ -190,7 +335,7 @@
         "line": "O prédio inteiro reclamou do cheiro por semanas. Ninguém subiu pra olhar."
       },
       {
-        "who": "Artie",
+        "who": "Luci",
         "line": "As contas tão pagas. Correio recolhido. Sarah... alguém MOROU aqui esse tempo todo."
       },
       {
@@ -309,6 +454,54 @@
         "clueText": "Contas recolhidas e empilhadas por data, pagas em dia. Rotina de qualquer vizinho do prédio. Nada aqui diferencia este apartamento de outro qualquer."
       },
       {
+        "id": "cama",
+        "kind": "bed",
+        "pos": [
+          -3.0,
+          0,
+          0.3
+        ],
+        "rot": 1.5708,
+        "name": "Cama de solteiro",
+        "interactive": true,
+        "clueText": "Um lado do colchão afundado, o outro quase sem uso. Alguém dormia sempre do mesmo lado, mesmo sozinho."
+      },
+      {
+        "id": "vaso",
+        "kind": "toilet",
+        "size": [
+          0.22,
+          0.4
+        ],
+        "pos": [
+          3.0,
+          0.2,
+          2.8
+        ],
+        "name": "Vaso sanitário",
+        "interactive": true,
+        "sketch": "dishes",
+        "clueText": "Porcelana gelada, tampa abaixada. O canto do banheiro é o único lugar do apartamento sem nenhuma marca de uso recente."
+      },
+      {
+        "id": "pia-banheiro",
+        "kind": "box",
+        "size": [
+          0.5,
+          0.15,
+          0.4
+        ],
+        "pos": [
+          2.3,
+          0.75,
+          3.0
+        ],
+        "name": "Pia do banheiro",
+        "interactive": true,
+        "sketch": "dishes",
+        "clueText": "Torneira seca, sem gota. Diferente da pia da cozinha, essa aqui não foi usada esta semana."
+      },
+      {
         "id": "porta2",
         "kind": "box",
         "size": [
@@ -325,8 +518,46 @@
         "interactive": true,
         "isDoor": true,
         "sketch": "door"
+      },
+      {
+        "id": "marionete2",
+        "kind": "stalker",
+        "pos": [
+          -1.2,
+          0,
+          -3.0
+        ],
+        "name": "A Marionete"
+      },
+      {
+        "id": "uvapto",
+        "kind": "uvdecal",
+        "size": [
+          1.8,
+          0.8
+        ],
+        "pos": [
+          -3.4,
+          1.4,
+          0.2
+        ],
+        "rot": 1.5708,
+        "text": "ALGUÉM MAIS\nMORAVA AQUI",
+        "name": "Escrita revelada na parede",
+        "interactive": true,
+        "isClue": true,
+        "uvOnly": true,
+        "sketch": "uvwall",
+        "clueText": "Atrás do gesso, quase apagado: 'ALGUÉM MAIS MORAVA AQUI'. A tinta é mais velha que qualquer coisa neste apartamento."
       }
     ],
+    "stalkerEncounter": {
+      "afterClue": "polaroid",
+      "lines": [
+        "Bonita a mesa posta, não? Ele gostava de companhia — mesmo quando a companhia não respondia mais.",
+        "Continua espiando, detetive. Eu gosto de plateia."
+      ]
+    },
     "deduction": {
       "intro": "Reconstrua a rotina diária dele com os corpos, do primeiro ao último gesto do dia.",
       "cards": [
@@ -382,7 +613,7 @@
     ],
     "radioIntro": [
       {
-        "who": "Artie",
+        "who": "Luci",
         "line": "Sarah, esse corredor... eu já passei por esse cartaz. Três vezes."
       },
       {
@@ -470,7 +701,7 @@
       },
       {
         "id": "catraca",
-        "kind": "box",
+        "kind": "turnstile",
         "size": [
           0.9,
           1.0,
@@ -504,8 +735,46 @@
         "interactive": true,
         "isDoor": true,
         "sketch": "door"
+      },
+      {
+        "id": "marionete3",
+        "kind": "stalker",
+        "pos": [
+          -1.2,
+          0,
+          -9
+        ],
+        "name": "A Marionete"
+      },
+      {
+        "id": "uvmetro",
+        "kind": "uvdecal",
+        "size": [
+          1.6,
+          0.7
+        ],
+        "pos": [
+          1.65,
+          1.5,
+          -9.5
+        ],
+        "rot": -1.5708,
+        "text": "DE NOVO.\nE DE NOVO.",
+        "name": "Escrita revelada no azulejo",
+        "interactive": true,
+        "isClue": true,
+        "uvOnly": true,
+        "sketch": "uvwall",
+        "clueText": "Só aparece sob luz negra, riscado bem baixo, na altura de quem se agacha pra escrever sem ser visto: 'DE NOVO. E DE NOVO.'"
       }
     ],
+    "stalkerEncounter": {
+      "afterClue": "pichacao",
+      "lines": [
+        "Eu conto as suas voltas, sabia? Essa foi a quarta.",
+        "Quer saber quantas faltam? Eu também não sei. É a graça."
+      ]
+    },
     "deduction": {
       "intro": "Ordene as marcas do corredor no tempo. Quando o tempo voltar a andar, o ciclo quebra. Nem tudo aqui marca o tempo do ciclo.",
       "cards": [
@@ -560,7 +829,7 @@
         "line": "Arquivo morto da polícia. A energia foi cortada há anos. Oficialmente, isso aqui não existe mais."
       },
       {
-        "who": "Artie",
+        "who": "Luci",
         "line": "Então por que tem caixas novas? Sarah, alguém vem aqui. Alguém ORGANIZA isso aqui."
       }
     ],
@@ -752,12 +1021,12 @@
     ],
     "radioIntro": [
       {
-        "who": "Artie",
+        "who": "Luci",
         "line": "Sarah... isso é a réplica do quarto da filha do Okada. Móvel por móvel."
       },
       {
         "who": "Sarah",
-        "line": "Do arquivo do caso. Ele construiu isso de memória. Artie, quem faz isso não tá caçando. Tá... consertando."
+        "line": "Do arquivo do caso. Ele construiu isso de memória. Luci, quem faz isso não tá caçando. Tá... consertando."
       }
     ],
     "room": {
@@ -887,8 +1156,46 @@
         "interactive": true,
         "isDoor": true,
         "sketch": "door"
+      },
+      {
+        "id": "marionete5",
+        "kind": "stalker",
+        "pos": [
+          1.8,
+          0,
+          -2.2
+        ],
+        "name": "A Marionete"
+      },
+      {
+        "id": "uvquarto",
+        "kind": "uvdecal",
+        "size": [
+          1.6,
+          0.7
+        ],
+        "pos": [
+          -2.9,
+          1.3,
+          -1.5
+        ],
+        "rot": 1.5708,
+        "text": "ELE TAMBÉM TEVE\nUM QUARTO ASSIM",
+        "name": "Escrita revelada na parede",
+        "interactive": true,
+        "isClue": true,
+        "uvOnly": true,
+        "sketch": "uvwall",
+        "clueText": "Atrás do papel de parede descascado: 'ELE TAMBÉM TEVE UM QUARTO ASSIM'. A letra é adulta, mas treme como letra de criança."
       }
     ],
+    "stalkerEncounter": {
+      "afterClue": "urso",
+      "lines": [
+        "Gostou do ursinho? Comprei ontem. Os outros móveis eu não pude escolher.",
+        "Esse quarto é meu também, sabia? Ele construiu pros dois."
+      ]
+    },
     "deduction": {
       "intro": "Reconstrua a melodia da caixa de música, do primeiro ao último movimento. Nem tudo neste quarto é memória dela.",
       "cards": [
@@ -945,10 +1252,10 @@
     "radioIntro": [
       {
         "who": "Sarah",
-        "line": "Luz de emergência. Geradores ligados há semanas. Artie, isso aqui tá OPERANDO."
+        "line": "Luz de emergência. Geradores ligados há semanas. Luci, isso aqui tá OPERANDO."
       },
       {
-        "who": "Artie",
+        "who": "Luci",
         "line": "Ele transformou a linha de abate num... raciocínio. Se a gente entender a ordem, entende o que sobrou dele."
       }
     ],
@@ -965,7 +1272,8 @@
       "fogDensity": 0.14,
       "ambient": 0.08,
       "hemi": 0.16,
-      "redEmergency": true
+      "redEmergency": true,
+      "bloodFloor": true
     },
     "objects": [
       {
@@ -1096,8 +1404,48 @@
         "interactive": true,
         "isDoor": true,
         "sketch": "door"
+      },
+      {
+        "id": "marionete6",
+        "kind": "stalker",
+        "pos": [
+          0.5,
+          0,
+          2.0
+        ],
+        "name": "A Marionete"
+      },
+      {
+        "id": "uvmatadouro",
+        "kind": "uvdecal",
+        "size": [
+          2.0,
+          0.9
+        ],
+        "pos": [
+          4.4,
+          1.6,
+          0.5
+        ],
+        "rot": -1.5708,
+        "text": "O PALHAÇO NÃO\nESCOLHE AS VÍTIMAS",
+        "name": "Escrita revelada no metal",
+        "interactive": true,
+        "isClue": true,
+        "uvOnly": true,
+        "sketch": "uvwall",
+        "clueText": "Riscado no metal, por baixo da ferrugem: 'O PALHAÇO NÃO ESCOLHE AS VÍTIMAS'. Alguém sabia de mais uma coisa que não devia."
       }
     ],
+    "stalkerEncounter": {
+      "afterClue": "etiqueta",
+      "lines": [
+        "Quase lá, detetive. Sempre soube contar até o fim.",
+        "Vai, aponta essa arma. Vamos ver se você tem estômago igual ao meu."
+      ],
+      "capture": true,
+      "captureLine": "Ele se rende sem lutar, quase decepcionado. \"Vocês pegaram o palhaço errado\", ele ri, sendo arrastado pra fora."
+    },
     "deduction": {
       "intro": "Reconstrua a linha dele, da entrada à saída. Nem tudo neste galpão pertence ao processo.",
       "cards": [
@@ -1143,15 +1491,15 @@
       ]
     },
     "connection": {
-      "label": "A oficina",
-      "text": "A linha de abate virou linha de raciocínio. E toda linha termina num palco: o lugar onde ele apresenta o resultado."
+      "label": "O cara errado",
+      "text": "Ele se entregou rindo — e isso não fechava. Confissão fácil demais, detalhes que ele simplesmente não sabia. Alguém armou esse teatro todo, e o verdadeiro autor ainda nem apareceu."
     }
   },
   {
     "id": "teatro",
     "name": "Fase 7 — O Teatro de Marionetes",
-    "subtitle": "Não há mais quebra-cabeças. Só ele.",
-    "hint": "Aproxime-se.",
+    "subtitle": "Vazio — ele quis assim.",
+    "hint": "Leia o que foi deixado.",
     "spawn": [
       0,
       4.2
@@ -1159,15 +1507,15 @@
     "radioIntro": [
       {
         "who": "Sarah",
-        "line": "Palco iluminado. Um holofote só. Artie... ele tá ali no centro."
+        "line": "Palco iluminado. Um holofote só. Luci... não tem ninguém aqui."
       },
       {
-        "who": "Artie",
-        "line": "Kenji Okada. Meu Deus. Ele pesa uns quarenta quilos."
+        "who": "Luci",
+        "line": "Ele marcou esse lugar no bilhete. Por que deixar vazio?"
       },
       {
         "who": "Sarah",
-        "line": "Cercado de peças em branco. Ele não montou os quebra-cabeças pra gente, Artie. Ele TAVA TENTANDO se montar. Sua escolha, parceiro. Eu cubro qualquer uma."
+        "line": "Não tá vazio. Olha o centro do palco."
       }
     ],
     "room": {
@@ -1179,22 +1527,44 @@
         "wall": "dark",
         "ceil": "dark"
       },
-      "fogColor": "050506",
-      "fogDensity": 0.1,
-      "ambient": 0.16,
-      "hemi": 0.2
+      "fogColor": "0c0c0d",
+      "fogDensity": 0.12,
+      "ambient": 0.12,
+      "hemi": 0.16,
+      "hemiColor": "6e6c68",
+      "hemiGroundColor": "050505"
     },
     "objects": [
       {
-        "id": "kenji",
-        "kind": "kenji",
+        "id": "carta-final",
+        "kind": "box",
+        "size": [
+          0.3,
+          0.02,
+          0.22
+        ],
+        "pos": [
+          0,
+          0.02,
+          -1.6
+        ],
+        "name": "Uma carta, sozinha no palco",
+        "interactive": true,
+        "sketch": "paper",
+        "clueText": "«Luci — reconheceu a letra? Foi você quem me ensinou a escrever o M maiúsculo. Eu treinei em cima do seu nome até acertar o meu. Seis pessoas. A única coisa que tinham em comum era a letra que a gente carrega — não por ódio, por ensaio. Eu precisava acertar o movimento antes do sétimo. O sétimo sou eu. Estou atrás da cortina — não vim fugir, vim terminar o que o velho começou e você nunca teve chance de impedir. Dessa vez você está em casa. Só peço uma coisa: quando perguntarem quem matou essas seis pessoas, o assassino já vai estar morto. Sem confissão, sem julgamento, sem nome no jornal. Cadê o culpado, Luci? Essa pergunta é o meu presente. Guarda ela.»",
+        "revealsId": "miguel"
+      },
+      {
+        "id": "miguel",
+        "kind": "miguel",
         "pos": [
           0,
           0,
           -2.5
         ],
-        "name": "Kenji Okada",
-        "interactive": true
+        "name": "Miguel French",
+        "interactive": true,
+        "startHidden": true
       },
       {
         "id": "cortina",
@@ -1212,14 +1582,30 @@
         "name": "Cortina do palco",
         "interactive": true,
         "sketch": "curtain",
-        "clueText": "Veludo comido por traças. Atrás dela, nada. O teatro inteiro existe pra este único ato."
+        "clueText": "Veludo comido por traças. Foi atrás dela que ele esperou — tempo suficiente pra você ler tudo antes de olhar pra cima."
       }
     ],
     "deduction": null,
     "piece": null,
+    "confrontLines": [
+      "Ele sai de trás da cortina devagar, as mãos abertas — sem pressa, como quem espera isso a vida inteira.",
+      "\"Demorou\", ele diz, sorrindo. \"Sempre fui bom em chegar tarde.\"",
+      "Ele se ajoelha e empurra o revólver pelo chão até os seus pés. Não olha pra arma. Olha só pra você.",
+      "\"Termina, Luci. É pra isso que você veio.\""
+    ],
+    "postConfrontLine": {
+      "who": "Sarah",
+      "line": "Ele caiu e não levantou mais, Luci. Daqui a pouco vem gente. O que eu escrevo no relatório?"
+    },
+    "finalChoice": {
+      "title": "O RELATÓRIO",
+      "body": "Sarah espera, caneta na mão, os olhos entre você e o corpo. Nenhuma câmera nesta sala. Nenhuma testemunha além de vocês dois.",
+      "a": { "id": "reveal", "label": "Revelar a verdade" },
+      "b": { "id": "hide", "label": "Enterrar o nome dele" }
+    },
     "connection": {
-      "label": "O Verdadeiro Assassino",
-      "text": "Kenji era a marionete. As cordas continuam lá em cima — e continuam puxando."
+      "label": "O nome que sobrou",
+      "text": "Seis nomes emprestados, e um espelho no fim da linha. O processo fecha — mas o que aconteceu neste palco não cabe em nenhum boletim."
     }
   },
   {
@@ -1244,9 +1630,20 @@
       "fogDensity": 0.13,
       "ambient": 0.1,
       "hemi": 0.22,
-      "rain": true
+      "rain": true,
+      "outdoor": true
     },
     "objects": [
+      {
+        "id": "poste-ep",
+        "kind": "streetlamp",
+        "pos": [
+          -2.3,
+          0,
+          1.8
+        ],
+        "name": "Poste de luz"
+      },
       {
         "id": "carro",
         "kind": "box",
@@ -1280,21 +1677,59 @@
         "color": "24262a"
       }
     ],
-    "radioIntro": [
+    "radioIntroReveal": [
       {
-        "who": "Artie",
-        "line": "Acabou. A papelada que se dane até amanhã."
+        "who": "Luci",
+        "line": "Escreve tudo, Sarah. Meu nome, o dele, o motivo. Tudo."
       },
       {
         "who": "Sarah",
-        "line": "Sabe o pior? Toda pista fechava. Toda peça encaixava. Perfeito demais pra uma mente quebrada."
+        "line": "Isso te tira do caso. Te tira de tudo, Luci."
       },
       {
-        "who": "Artie",
-        "line": "Sarah. Deixa. Encaixou, acabou."
+        "who": "Luci",
+        "line": "Já não tinha mais nada pra me tirar."
       }
     ],
-    "announcement": "— [rádio da polícia] — ...atenção todas as unidades... homicídio confirmado no distrito leste... vítima com objeto alojado na garganta... cena organizada... repito, ocorrendo AGORA...",
+    "radioIntroHide": [
+      {
+        "who": "Sarah",
+        "line": "Ninguém mais sabe além da gente. Ninguém precisa saber."
+      },
+      {
+        "who": "Luci",
+        "line": "Então não teve Miguel. Não teve irmão. Só mais um corpo sem nome."
+      },
+      {
+        "who": "Sarah",
+        "line": "Luci..."
+      },
+      {
+        "who": "Luci",
+        "line": "Deixa. Encaixou, acabou."
+      }
+    ],
+    "announcementReveal": "— [rádio da polícia] — ...atenção todas as unidades... agente do Setor-4 confessa autoria de homicídio... vítima identificada como Miguel French, ligado a uma série de seis mortes anteriores... agente afastado, aguarda audiência de custódia... caso oficialmente ENCERRADO...",
+    "announcementHide": "— [rádio da polícia] — ...atenção todas as unidades... série de homicídios de padrão M segue SEM suspeito identificado... investigação permanece em aberto... repito, nenhuma novidade no padrão...",
+    "announcementHide2": "Meses depois, encontraram o Luci. Não deixou bilhete. Só um nome, escrito atrás de uma polaroid: Miguel.",
+    "creditsTagReveal": "Um nome, enfim. Um preço, também.",
+    "creditsTagHide": "O caso nunca fechou. Era isso que ele queria.",
+    "radioIntroCaught": [
+      {
+        "who": "Sarah",
+        "line": "Setor-4 pra central... Setor-4 pra central, câmbio."
+      },
+      {
+        "who": "Sarah",
+        "line": "Ele não vai responder. Não hoje."
+      },
+      {
+        "who": "Sarah",
+        "line": "Eu fecho isso sozinha. De algum jeito."
+      }
+    ],
+    "announcementCaught": "— [rádio da polícia] — ...atenção todas as unidades... agente do Setor-4 fora de serviço, causa em apuração... série de homicídios de padrão M segue SEM suspeito identificado... investigação reatribuída... repito, nenhuma novidade no padrão...",
+    "creditsTagCaught": "Ele nunca chegou perto o bastante. A Marionete continua dançando.",
     "deduction": null,
     "piece": null
   }

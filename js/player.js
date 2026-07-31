@@ -2,11 +2,14 @@
 import * as THREE from 'three';
 import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js';
 import { G, State, emit } from './game-state.js';
+import { playFootstep } from './audio.js';
 
 const keys = { w: false, a: false, s: false, d: false };
 const SPEED = 2.6; // lento e pesado, vibe de terror
 const PLAYER_RADIUS = 0.35;
 const EYE_HEIGHT = 1.65;
+const STEP_INTERVAL = 0.46; // passo lento, casando com o SPEED baixo
+let stepTimer = 0;
 
 const dir = new THREE.Vector3();
 const right = new THREE.Vector3();
@@ -56,6 +59,13 @@ export function updatePlayer(dt) {
   if (move.lengthSq() > 0) {
     move.normalize().multiplyScalar(SPEED * dt);
     G.camera.position.add(move);
+    stepTimer += dt;
+    if (stepTimer >= STEP_INTERVAL) {
+      stepTimer -= STEP_INTERVAL;
+      playFootstep(G.level?.room?.tex?.floor);
+    }
+  } else {
+    stepTimer = 0;
   }
 
   // Colisão com as paredes da sala (AABB)
