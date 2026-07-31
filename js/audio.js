@@ -244,12 +244,33 @@ export function startAmbient(roughness = 0.5) {
   const lp = c.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 300;
   const src = c.createBufferSource();
   src.buffer = noiseBuffer(4); src.loop = true;
-  const ng = c.createGain(); ng.gain.value = 0.015 + roughness * 0.02;
+  // Passa-baixa forte no ruído — sem isso ele vira "chiado" e é fácil de confundir com chuva
+  const nlp = c.createBiquadFilter(); nlp.type = 'lowpass'; nlp.frequency.value = 220;
+  const ng = c.createGain(); ng.gain.value = 0.02 + roughness * 0.02;
   o1.connect(g); o2.connect(g); g.connect(lp).connect(c.destination);
-  src.connect(ng).connect(c.destination);
+  src.connect(nlp).connect(ng).connect(c.destination);
   o1.start(); o2.start(); src.start();
   ambientNode = { nodes: [o1, o2, src] };
 }
 export function stopAmbient() {
   if (ambientNode) { ambientNode.nodes.forEach((n) => { try { n.stop(); } catch (e) {} }); ambientNode = null; }
+}
+
+// Chuva — som dedicado, separado do drone ambiente, só toca em salas com room.rain
+let rainNode = null;
+export function startRain(volume = 0.05) {
+  stopRain();
+  const c = ensureCtx();
+  const src = c.createBufferSource();
+  src.buffer = noiseBuffer(4);
+  src.loop = true;
+  const hp = c.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 1200;
+  const bp = c.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 4200; bp.Q.value = 0.7;
+  const g = c.createGain(); g.gain.value = volume;
+  src.connect(hp).connect(bp).connect(g).connect(c.destination);
+  src.start();
+  rainNode = { src };
+}
+export function stopRain() {
+  if (rainNode) { try { rainNode.src.stop(); } catch (e) {} rainNode = null; }
 }

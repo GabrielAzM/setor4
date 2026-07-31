@@ -3,7 +3,7 @@
     "id": "beco",
     "name": "Fase 1 — O Beco",
     "subtitle": "A chuva não lava tudo.",
-    "hint": "WASD anda · E inspeciona · TAB deduz · C quadro do caso · K gravador · F luz negra",
+    "hint": "WASD anda · E inspeciona · TAB deduz · C quadro do caso · K gravador · F luz negra — uma marca só aparece sob ela",
     "spawn": [
       0,
       4.6
@@ -279,8 +279,26 @@
         "uvOnly": true,
         "sketch": "uvwall",
         "clueText": "Riscado na tijoleira, alto demais pra ser acidental: 'ELE ESCOLHE QUEM ESPERA'. Só aparece sob luz negra — quem escreveu não queria ser visto escrevendo."
+      },
+      {
+        "id": "marionete1",
+        "kind": "stalker",
+        "pos": [
+          -1.0,
+          0,
+          -3.0
+        ],
+        "name": "A Marionete"
       }
     ],
+    "stalkerEncounter": {
+      "afterClue": "corpo",
+      "lines": [
+        "Ele esperou tanto quanto eu esperei por você.",
+        "Bang. [risada] Só brincando. Ainda não, detetive. Ainda não."
+      ],
+      "lethal": false
+    },
     "deduction": {
       "intro": "Reconstrua a noite. O que pertence à sequência do crime — e em que ordem?",
       "cards": [
@@ -555,6 +573,7 @@
       "afterClue": "polaroid",
       "lines": [
         "Bonita a mesa posta, não? Ele gostava de companhia — mesmo quando a companhia não respondia mais.",
+        "[risada] Ai, desculpa. Isso foi rude da minha parte. Ele SEMPRE gostou de companhia.",
         "Continua espiando, detetive. Eu gosto de plateia."
       ]
     },
@@ -772,7 +791,8 @@
       "afterClue": "pichacao",
       "lines": [
         "Eu conto as suas voltas, sabia? Essa foi a quarta.",
-        "Quer saber quantas faltam? Eu também não sei. É a graça."
+        "Quer saber quantas faltam? Eu também não sei. É a graça.",
+        "[risada] Para de olhar pra trás. Eu não tô atrás de você. Ainda."
       ]
     },
     "deduction": {
@@ -964,8 +984,27 @@
         "interactive": true,
         "isDoor": true,
         "sketch": "door"
+      },
+      {
+        "id": "marionete4",
+        "kind": "stalker",
+        "pos": [
+          1.0,
+          0,
+          1.5
+        ],
+        "name": "A Marionete"
       }
     ],
+    "stalkerEncounter": {
+      "afterClue": "caixa87",
+      "lines": [
+        "Eu ORGANIZO essas caixas, sabia? Cada uma no lugar certo. Igual eu.",
+        "[risada] Relaxa. Hoje eu só vim arquivar."
+      ],
+      "shot": false,
+      "lethal": false
+    },
     "deduction": {
       "intro": "Quatro casos enterrados. Ligue-os na linha do tempo, do mais antigo ao mais recente. Um deles não pertence ao padrão.",
       "cards": [
@@ -1193,7 +1232,8 @@
       "afterClue": "urso",
       "lines": [
         "Gostou do ursinho? Comprei ontem. Os outros móveis eu não pude escolher.",
-        "Esse quarto é meu também, sabia? Ele construiu pros dois."
+        "Esse quarto é meu também, sabia? Ele construiu pros dois.",
+        "[risada] Fica quieto. Deixa eu lembrar em paz."
       ]
     },
     "deduction": {
@@ -1441,7 +1481,8 @@
       "afterClue": "etiqueta",
       "lines": [
         "Quase lá, detetive. Sempre soube contar até o fim.",
-        "Vai, aponta essa arma. Vamos ver se você tem estômago igual ao meu."
+        "Vai, aponta essa arma. Vamos ver se você tem estômago igual ao meu.",
+        "[risada] NÃO — espera. Isso não... isso não tava no roteiro."
       ],
       "capture": true,
       "captureLine": "Ele se rende sem lutar, quase decepcionado. \"Vocês pegaram o palhaço errado\", ele ri, sendo arrastado pra fora."

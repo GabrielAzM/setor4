@@ -5,7 +5,7 @@ import { initPlayer, updatePlayer, spawnAt } from './player.js';
 import { buildLevel, updateRoomFX, setUV, applyLoopStage, popIn } from './room-builder.js';
 import { initInteraction, updateInteraction } from './interaction.js';
 import * as ui from './ui.js';
-import { ensureCtx, startStatic, stopStatic, playFinalClick, startAmbient, playGunshot, playLaugh } from './audio.js';
+import { ensureCtx, startStatic, stopStatic, playFinalClick, startAmbient, playGunshot, playLaugh, startRain, stopRain } from './audio.js';
 
 let LEVELS = [];
 
@@ -88,8 +88,10 @@ async function boot() {
     runEnding('caught');
   });
 
-  // Encontro roteirizado com a Marionete: aparece, ameaça, atira (desconta 1 vida), some —
+  // Encontro roteirizado com a Marionete: aparece, ameaça, talvez atire, some —
   // ou, na Fase 6, é capturada em vez de sumir (cfg.capture / cfg.captureLine no JSON).
+  // cfg.shot (padrão true) controla se ele atira; cfg.lethal (padrão true) controla se
+  // ESSE tiro desconta vida — ele pode "atirar de brincadeira" pra manter o jogador em dúvida.
   bus.addEventListener('stalker-encounter', (e) => {
     const cfg = e.detail;
     if (!cfg || !G.stalkerMesh) return;
@@ -97,13 +99,17 @@ async function boot() {
     playLaugh();
     popIn(G.stalkerMesh);
     ui.barkSequence(cfg.lines, () => {
-      playGunshot();
-      emit('punish-start');
-      G.lives = Math.max(0, G.lives - 1);
-      ui.updateHUD();
+      const shoots = cfg.shot !== false;
+      const lethal = shoots && cfg.lethal !== false;
+      if (shoots) playGunshot();
+      if (lethal) {
+        emit('punish-start');
+        G.lives = Math.max(0, G.lives - 1);
+        ui.updateHUD();
+      }
       setTimeout(() => {
-        emit('punish-end');
-        if (G.lives <= 0) {
+        if (lethal) emit('punish-end');
+        if (lethal && G.lives <= 0) {
           setState(State.CINEMATIC);
           emit('lives-depleted');
           return;
@@ -111,7 +117,7 @@ async function boot() {
         G.stalkerMesh.visible = false;
         if (cfg.capture && cfg.captureLine) ui.toast(cfg.captureLine);
         G.uiOpen = false;
-      }, 900);
+      }, lethal ? 900 : 500);
     });
   });
 
@@ -160,6 +166,8 @@ function loadLevel(i) {
     // Drone ambiente por fase — a "aspereza" nasce da própria sala (neblina densa, luz de emergência)
     const r = level.room || {};
     startAmbient(Math.min(1, (r.fogDensity ?? 0.12) * 3 + (r.redEmergency ? 0.4 : 0)));
+    // Chuva é um som à parte — só toca onde a sala tem chuva de verdade, senão desliga
+    if (r.rain) startRain(); else stopRain();
     const sp = level.spawn || [0, 3];
     spawnAt(sp[0], sp[1], level.spawnFace ?? 0);
     ui.updateHUD();
@@ -195,10 +203,15 @@ function runEnding(choice) {
     G.caseBoard.push({ name: teatro.name.replace(/^Fase \d+ — /, ''), connLabel: teatro.connection.label, connText: teatro.connection.text });
   }
   ui.fadeBlack(() => {
-    // Epílogo é a última entrada do levels.json (cinematic)
+    // Epílogo é a última entrada do levels.json (cinematic) — constrói fora do loadLevel(),
+    // então precisa resetar o ambiente sonoro na mão (senão o drone/chuva da fase anterior continuam)
     const ep = LEVELS.find((l) => l.cinematic);
     G.level = ep;
+    stopStatic();
     buildLevel(ep);
+    const epRoom = ep.room || {};
+    startAmbient(Math.min(1, (epRoom.fogDensity ?? 0.12) * 3 + (epRoom.redEmergency ? 0.4 : 0)));
+    if (epRoom.rain) startRain(); else stopRain();
     spawnAt(0, 4.4, 0);
     ui.unfade();
 
