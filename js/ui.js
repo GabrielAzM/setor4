@@ -35,21 +35,26 @@ export function updateHUD() {
 export function setPrompt(text) { $('prompt').textContent = text; }
 
 let toastTimer = null;
-export function toast(text) {
+export function toast(text, duration = 3200) {
   const t = $('toast');
   t.textContent = text;
   t.classList.add('show');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
+  toastTimer = setTimeout(() => t.classList.remove('show'), duration);
 }
 
-// Falas automáticas da Marionete — avança sozinho, sem esperar clique (é uma intrusão, não um diálogo calmo)
+// Falas automáticas da Marionete/Miguel — avança sozinho, sem esperar clique (é uma
+// intrusão, não um diálogo calmo). O tempo de leitura escala com o tamanho da frase,
+// em vez de um intervalo fixo curto demais pra falas longas.
+function readingTime(line) { return Math.max(1800, 800 + line.length * 55); }
 export function barkSequence(lines, onDone) {
   let i = 0;
   const next = () => {
     if (i >= lines.length) { onDone(); return; }
-    toast(lines[i++]);
-    setTimeout(next, 1900);
+    const line = lines[i++];
+    const delay = readingTime(line);
+    toast(line, delay);
+    setTimeout(next, delay);
   };
   next();
 }
